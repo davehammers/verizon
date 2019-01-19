@@ -1,0 +1,581 @@
+# remark   Aruba_Signal
+# remark   WiFi
+entry WiFi-5 { if match all { protocol udp; source-address 0.0.0.0/0; source-port 4500; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 30 ; count WiFi-5 ;}}
+entry WiFi-10 { if match all { protocol udp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0; destination-port 4500;} then { permit ; qosprofile qp7 ; replace-dscp-value 30 ; count WiFi-10 ;}}
+
+# remark   bulkdata
+# remark   FTP
+entry FTP-5 { if match all { protocol tcp; source-address 0.0.0.0/0; source-port 20; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count FTP-5 ;}}
+entry FTP-10 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0; destination-port 20;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count FTP-10 ;}}
+entry FTP-15 { if match all { protocol tcp; source-address 0.0.0.0/0; source-port 21; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count FTP-15 ;}}
+entry FTP-20 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0; destination-port 21;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count FTP-20 ;}}
+# remark   SFTP-SCP-SSH
+entry SFTP-SCP-SSH-5 { if match all { protocol tcp; source-address 0.0.0.0/0; source-port 22; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count SFTP-SCP-SSH-5 ;}}
+entry SFTP-SCP-SSH-10 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0; destination-port 22;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count SFTP-SCP-SSH-10 ;}}
+# remark   MS-DS
+entry MS-DS-5 { if match all { protocol tcp; source-address 0.0.0.0/0; source-port 445; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count MS-DS-5 ;}}
+entry MS-DS-10 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0; destination-port 445;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count MS-DS-10 ;}}
+# remark   TFTP
+entry TFTP-5 { if match all { protocol udp; source-address 0.0.0.0/0; source-port 69; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count TFTP-5 ;}}
+entry TFTP-10 { if match all { protocol udp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0; destination-port 69;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count TFTP-10 ;}}
+# remark   BVI
+entry BVI-5 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 10.11.209.53/32;}     then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count BVI-5 ;}}
+entry BVI-10 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 10.11.210.82/32;}     then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count BVI-10 ;}}
+entry BVI-15 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 10.144.208.224/32;}     then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count BVI-15 ;}}
+entry BVI-20 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 10.144.210.79/32;}     then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count BVI-20 ;}}
+entry BVI-25 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 10.174.132.131/32;}     then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count BVI-25 ;}}
+entry BVI-30 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 10.174.132.140/32;}     then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count BVI-30 ;}}
+entry BVI-35 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 10.174.159.122/32;}     then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count BVI-35 ;}}
+entry BVI-40 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 10.191.135.248/32;}     then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count BVI-40 ;}}
+# remark   Symantec
+entry Symantec-5 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0; destination-port 790;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count Symantec-5 ;}}
+
+
+
+
+# remark   class1_dc_subnets
+# remark   ODC
+entry ODC-5 { if match all { source-address 0.0.0.0/0; destination-address 10.170.0.0/16;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count ODC-5 ;}}
+entry ODC-10 { if match all { source-address 0.0.0.0/0; destination-address 10.160.0.0/16;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count ODC-10 ;}}
+# remark   DDC
+entry DDC-5 { if match all { source-address 0.0.0.0/0; destination-address 10.96.0.0/15;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count DDC-5 ;}}
+# remark   TDC
+entry TDC-5 { if match all { source-address 0.0.0.0/0; destination-address 10.144.0.0/15;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count TDC-5 ;}}
+# remark   SDC
+entry SDC-5 { if match all { source-address 0.0.0.0/0; destination-address 10.10.0.0/15;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count SDC-5 ;}}
+# remark   AWS
+entry AWS-5 { if match all { source-address 0.0.0.0/0; destination-address 10.74.0.0/16;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count AWS-5 ;}}
+# remark   Wireless
+entry Wireless-5 { if match all { source-address 0.0.0.0/0; destination-address 153.114.128.0/23;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Wireless-5 ;}}
+# remark   Loadbalancer
+entry Loadbalancer-5 { if match all { source-address 0.0.0.0/0; destination-address 8.15.65.0/25;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-5 ;}}
+entry Loadbalancer-10 { if match all { source-address 0.0.0.0/0; destination-address 10.73.130.64/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-10 ;}}
+entry Loadbalancer-15 { if match all { source-address 0.0.0.0/0; destination-address 10.73.216.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-15 ;}}
+entry Loadbalancer-20 { if match all { source-address 0.0.0.0/0; destination-address 10.73.217.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-20 ;}}
+entry Loadbalancer-25 { if match all { source-address 0.0.0.0/0; destination-address 10.73.220.0/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-25 ;}}
+entry Loadbalancer-30 { if match all { source-address 0.0.0.0/0; destination-address 10.73.220.128/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-30 ;}}
+entry Loadbalancer-35 { if match all { source-address 0.0.0.0/0; destination-address 10.77.13.0/25;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-35 ;}}
+entry Loadbalancer-40 { if match all { source-address 0.0.0.0/0; destination-address 10.77.12.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-40 ;}}
+entry Loadbalancer-45 { if match all { source-address 0.0.0.0/0; destination-address 10.77.14.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-45 ;}}
+entry Loadbalancer-50 { if match all { source-address 0.0.0.0/0; destination-address 10.77.15.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-50 ;}}
+entry Loadbalancer-55 { if match all { source-address 0.0.0.0/0; destination-address 10.77.65.64/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-55 ;}}
+entry Loadbalancer-60 { if match all { source-address 0.0.0.0/0; destination-address 10.77.74.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-60 ;}}
+entry Loadbalancer-65 { if match all { source-address 0.0.0.0/0; destination-address 10.77.129.0/25;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-65 ;}}
+entry Loadbalancer-70 { if match all { source-address 0.0.0.0/0; destination-address 10.77.136.0/23;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-70 ;}}
+entry Loadbalancer-75 { if match all { source-address 0.0.0.0/0; destination-address 10.77.140.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-75 ;}}
+entry Loadbalancer-80 { if match all { source-address 0.0.0.0/0; destination-address 71.246.168.32/28;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-80 ;}}
+entry Loadbalancer-85 { if match all { source-address 0.0.0.0/0; destination-address 71.246.168.160/28;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-85 ;}}
+entry Loadbalancer-90 { if match all { source-address 0.0.0.0/0; destination-address 112.64.1.96/28;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-90 ;}}
+entry Loadbalancer-95 { if match all { source-address 0.0.0.0/0; destination-address 112.64.2.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-95 ;}}
+entry Loadbalancer-100 { if match all { source-address 0.0.0.0/0; destination-address 112.80.74.32/28;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-100 ;}}
+entry Loadbalancer-105 { if match all { source-address 0.0.0.0/0; destination-address 112.80.76.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-105 ;}}
+entry Loadbalancer-110 { if match all { source-address 0.0.0.0/0; destination-address 113.128.104.0/22;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-110 ;}}
+entry Loadbalancer-115 { if match all { source-address 0.0.0.0/0; destination-address 113.128.137.128/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-115 ;}}
+entry Loadbalancer-120 { if match all { source-address 0.0.0.0/0; destination-address 113.128.189.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-120 ;}}
+entry Loadbalancer-125 { if match all { source-address 0.0.0.0/0; destination-address 113.128.216.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-125 ;}}
+entry Loadbalancer-130 { if match all { source-address 0.0.0.0/0; destination-address 113.128.240.192/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-130 ;}}
+entry Loadbalancer-135 { if match all { source-address 0.0.0.0/0; destination-address 113.128.241.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-135 ;}}
+entry Loadbalancer-140 { if match all { source-address 0.0.0.0/0; destination-address 113.130.1.192/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-140 ;}}
+entry Loadbalancer-145 { if match all { source-address 0.0.0.0/0; destination-address 113.130.5.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-145 ;}}
+entry Loadbalancer-150 { if match all { source-address 0.0.0.0/0; destination-address 113.130.6.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-150 ;}}
+entry Loadbalancer-155 { if match all { source-address 0.0.0.0/0; destination-address 113.130.17.192/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-155 ;}}
+entry Loadbalancer-160 { if match all { source-address 0.0.0.0/0; destination-address 113.130.21.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-160 ;}}
+entry Loadbalancer-165 { if match all { source-address 0.0.0.0/0; destination-address 113.130.22.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-165 ;}}
+entry Loadbalancer-170 { if match all { source-address 0.0.0.0/0; destination-address 113.130.216.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-170 ;}}
+entry Loadbalancer-175 { if match all { source-address 0.0.0.0/0; destination-address 113.130.224.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-175 ;}}
+entry Loadbalancer-180 { if match all { source-address 0.0.0.0/0; destination-address 113.130.232.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-180 ;}}
+entry Loadbalancer-185 { if match all { source-address 0.0.0.0/0; destination-address 113.130.240.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-185 ;}}
+entry Loadbalancer-190 { if match all { source-address 0.0.0.0/0; destination-address 113.130.252.240/28;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-190 ;}}
+entry Loadbalancer-195 { if match all { source-address 0.0.0.0/0; destination-address 113.132.139.32/28;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-195 ;}}
+entry Loadbalancer-200 { if match all { source-address 0.0.0.0/0; destination-address 113.132.185.160/28;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-200 ;}}
+entry Loadbalancer-205 { if match all { source-address 0.0.0.0/0; destination-address 113.132.208.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-205 ;}}
+entry Loadbalancer-210 { if match all { source-address 0.0.0.0/0; destination-address 113.132.224.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-210 ;}}
+entry Loadbalancer-215 { if match all { source-address 0.0.0.0/0; destination-address 113.132.232.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-215 ;}}
+entry Loadbalancer-220 { if match all { source-address 0.0.0.0/0; destination-address 113.140.20.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-220 ;}}
+entry Loadbalancer-225 { if match all { source-address 0.0.0.0/0; destination-address 113.140.35.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-225 ;}}
+entry Loadbalancer-230 { if match all { source-address 0.0.0.0/0; destination-address 113.140.194.0/23;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-230 ;}}
+entry Loadbalancer-235 { if match all { source-address 0.0.0.0/0; destination-address 113.140.216.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-235 ;}}
+entry Loadbalancer-240 { if match all { source-address 0.0.0.0/0; destination-address 113.140.224.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-240 ;}}
+entry Loadbalancer-245 { if match all { source-address 0.0.0.0/0; destination-address 113.140.232.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-245 ;}}
+entry Loadbalancer-250 { if match all { source-address 0.0.0.0/0; destination-address 113.140.240.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-250 ;}}
+entry Loadbalancer-255 { if match all { source-address 0.0.0.0/0; destination-address 114.8.32.0/23;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-255 ;}}
+entry Loadbalancer-260 { if match all { source-address 0.0.0.0/0; destination-address 114.8.160.0/23;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-260 ;}}
+entry Loadbalancer-265 { if match all { source-address 0.0.0.0/0; destination-address 114.9.96.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-265 ;}}
+entry Loadbalancer-270 { if match all { source-address 0.0.0.0/0; destination-address 114.9.184.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-270 ;}}
+entry Loadbalancer-275 { if match all { source-address 0.0.0.0/0; destination-address 132.197.180.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-275 ;}}
+entry Loadbalancer-280 { if match all { source-address 0.0.0.0/0; destination-address 132.197.187.0/25;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-280 ;}}
+entry Loadbalancer-285 { if match all { source-address 0.0.0.0/0; destination-address 138.83.65.224/27;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-285 ;}}
+entry Loadbalancer-290 { if match all { source-address 0.0.0.0/0; destination-address 138.83.67.0/25;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-290 ;}}
+entry Loadbalancer-295 { if match all { source-address 0.0.0.0/0; destination-address 138.83.77.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-295 ;}}
+entry Loadbalancer-300 { if match all { source-address 0.0.0.0/0; destination-address 138.83.98.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-300 ;}}
+entry Loadbalancer-305 { if match all { source-address 0.0.0.0/0; destination-address 138.83.128.0/23;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-305 ;}}
+entry Loadbalancer-310 { if match all { source-address 0.0.0.0/0; destination-address 138.83.136.0/21;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-310 ;}}
+entry Loadbalancer-315 { if match all { source-address 0.0.0.0/0; destination-address 138.83.161.224/27;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-315 ;}}
+entry Loadbalancer-320 { if match all { source-address 0.0.0.0/0; destination-address 138.83.162.0/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-320 ;}}
+entry Loadbalancer-325 { if match all { source-address 0.0.0.0/0; destination-address 138.83.168.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-325 ;}}
+entry Loadbalancer-330 { if match all { source-address 0.0.0.0/0; destination-address 138.83.173.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-330 ;}}
+entry Loadbalancer-335 { if match all { source-address 0.0.0.0/0; destination-address 138.83.212.0/23;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-335 ;}}
+entry Loadbalancer-340 { if match all { source-address 0.0.0.0/0; destination-address 138.83.243.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-340 ;}}
+entry Loadbalancer-345 { if match all { source-address 0.0.0.0/0; destination-address 140.108.1.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-345 ;}}
+entry Loadbalancer-350 { if match all { source-address 0.0.0.0/0; destination-address 140.108.3.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-350 ;}}
+entry Loadbalancer-355 { if match all { source-address 0.0.0.0/0; destination-address 140.108.6.128/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-355 ;}}
+entry Loadbalancer-360 { if match all { source-address 0.0.0.0/0; destination-address 140.108.7.128/27;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-360 ;}}
+entry Loadbalancer-365 { if match all { source-address 0.0.0.0/0; destination-address 140.108.11.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-365 ;}}
+entry Loadbalancer-370 { if match all { source-address 0.0.0.0/0; destination-address 140.108.21.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-370 ;}}
+entry Loadbalancer-375 { if match all { source-address 0.0.0.0/0; destination-address 140.108.26.128/25;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-375 ;}}
+entry Loadbalancer-380 { if match all { source-address 0.0.0.0/0; destination-address 140.108.28.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-380 ;}}
+entry Loadbalancer-385 { if match all { source-address 0.0.0.0/0; destination-address 140.108.158.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-385 ;}}
+entry Loadbalancer-390 { if match all { source-address 0.0.0.0/0; destination-address 140.108.160.0/27;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-390 ;}}
+entry Loadbalancer-395 { if match all { source-address 0.0.0.0/0; destination-address 144.8.1.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-395 ;}}
+entry Loadbalancer-400 { if match all { source-address 0.0.0.0/0; destination-address 144.8.4.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-400 ;}}
+entry Loadbalancer-405 { if match all { source-address 0.0.0.0/0; destination-address 148.131.9.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-405 ;}}
+entry Loadbalancer-410 { if match all { source-address 0.0.0.0/0; destination-address 148.131.10.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-410 ;}}
+entry Loadbalancer-415 { if match all { source-address 0.0.0.0/0; destination-address 148.131.15.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-415 ;}}
+entry Loadbalancer-420 { if match all { source-address 0.0.0.0/0; destination-address 148.131.20.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-420 ;}}
+entry Loadbalancer-425 { if match all { source-address 0.0.0.0/0; destination-address 148.131.24.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-425 ;}}
+entry Loadbalancer-430 { if match all { source-address 0.0.0.0/0; destination-address 148.131.27.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-430 ;}}
+entry Loadbalancer-435 { if match all { source-address 0.0.0.0/0; destination-address 148.132.3.128/25;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-435 ;}}
+entry Loadbalancer-440 { if match all { source-address 0.0.0.0/0; destination-address 159.67.88.128/28;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-440 ;}}
+entry Loadbalancer-445 { if match all { source-address 0.0.0.0/0; destination-address 159.67.198.0/28;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-445 ;}}
+entry Loadbalancer-450 { if match all { source-address 0.0.0.0/0; destination-address 159.67.201.0/27;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-450 ;}}
+entry Loadbalancer-455 { if match all { source-address 0.0.0.0/0; destination-address 159.67.205.0/27;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-455 ;}}
+entry Loadbalancer-460 { if match all { source-address 0.0.0.0/0; destination-address 159.67.216.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-460 ;}}
+entry Loadbalancer-465 { if match all { source-address 0.0.0.0/0; destination-address 159.161.53.0/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-465 ;}}
+entry Loadbalancer-470 { if match all { source-address 0.0.0.0/0; destination-address 159.161.54.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-470 ;}}
+entry Loadbalancer-475 { if match all { source-address 0.0.0.0/0; destination-address 159.161.146.0/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-475 ;}}
+entry Loadbalancer-480 { if match all { source-address 0.0.0.0/0; destination-address 159.161.147.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-480 ;}}
+entry Loadbalancer-485 { if match all { source-address 0.0.0.0/0; destination-address 159.161.209.64/27;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-485 ;}}
+entry Loadbalancer-490 { if match all { source-address 0.0.0.0/0; destination-address 159.161.213.64/27;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-490 ;}}
+entry Loadbalancer-495 { if match all { source-address 0.0.0.0/0; destination-address 161.128.130.0/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-495 ;}}
+entry Loadbalancer-500 { if match all { source-address 0.0.0.0/0; destination-address 161.128.136.96/27;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-500 ;}}
+entry Loadbalancer-505 { if match all { source-address 0.0.0.0/0; destination-address 161.128.232.0/21;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-505 ;}}
+entry Loadbalancer-510 { if match all { source-address 0.0.0.0/0; destination-address 166.37.130.0/23;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-510 ;}}
+entry Loadbalancer-515 { if match all { source-address 0.0.0.0/0; destination-address 166.37.162.0/23;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-515 ;}}
+entry Loadbalancer-520 { if match all { source-address 0.0.0.0/0; destination-address 166.37.218.0/23;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-520 ;}}
+entry Loadbalancer-525 { if match all { source-address 0.0.0.0/0; destination-address 166.46.166.216/29;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-525 ;}}
+entry Loadbalancer-530 { if match all { source-address 0.0.0.0/0; destination-address 166.47.199.240/29;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-530 ;}}
+entry Loadbalancer-535 { if match all { source-address 0.0.0.0/0; destination-address 166.47.199.248/29;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-535 ;}}
+entry Loadbalancer-540 { if match all { source-address 0.0.0.0/0; destination-address 166.68.29.64/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-540 ;}}
+entry Loadbalancer-545 { if match all { source-address 0.0.0.0/0; destination-address 166.68.38.0/23;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-545 ;}}
+entry Loadbalancer-550 { if match all { source-address 0.0.0.0/0; destination-address 166.68.166.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-550 ;}}
+entry Loadbalancer-555 { if match all { source-address 0.0.0.0/0; destination-address 166.68.167.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-555 ;}}
+entry Loadbalancer-560 { if match all { source-address 0.0.0.0/0; destination-address 166.68.195.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-560 ;}}
+entry Loadbalancer-565 { if match all { source-address 0.0.0.0/0; destination-address 166.68.227.0/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-565 ;}}
+entry Loadbalancer-570 { if match all { source-address 0.0.0.0/0; destination-address 166.68.230.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-570 ;}}
+entry Loadbalancer-575 { if match all { source-address 0.0.0.0/0; destination-address 192.76.60.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-575 ;}}
+entry Loadbalancer-580 { if match all { source-address 0.0.0.0/0; destination-address 192.76.66.0/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-580 ;}}
+entry Loadbalancer-585 { if match all { source-address 0.0.0.0/0; destination-address 192.76.66.192/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-585 ;}}
+entry Loadbalancer-590 { if match all { source-address 0.0.0.0/0; destination-address 192.76.67.0/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-590 ;}}
+entry Loadbalancer-595 { if match all { source-address 0.0.0.0/0; destination-address 192.76.67.128/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-595 ;}}
+entry Loadbalancer-600 { if match all { source-address 0.0.0.0/0; destination-address 192.76.67.208/28;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-600 ;}}
+entry Loadbalancer-605 { if match all { source-address 0.0.0.0/0; destination-address 192.76.68.0/25;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-605 ;}}
+entry Loadbalancer-610 { if match all { source-address 0.0.0.0/0; destination-address 192.76.82.64/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-610 ;}}
+entry Loadbalancer-615 { if match all { source-address 0.0.0.0/0; destination-address 192.76.84.32/27;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-615 ;}}
+entry Loadbalancer-620 { if match all { source-address 0.0.0.0/0; destination-address 192.76.84.192/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-620 ;}}
+entry Loadbalancer-625 { if match all { source-address 0.0.0.0/0; destination-address 192.76.85.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-625 ;}}
+entry Loadbalancer-630 { if match all { source-address 0.0.0.0/0; destination-address 198.23.5.0/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-630 ;}}
+entry Loadbalancer-635 { if match all { source-address 0.0.0.0/0; destination-address 198.23.5.128/25;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-635 ;}}
+entry Loadbalancer-640 { if match all { source-address 0.0.0.0/0; destination-address 198.23.20.0/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-640 ;}}
+entry Loadbalancer-645 { if match all { source-address 0.0.0.0/0; destination-address 198.23.20.128/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-645 ;}}
+entry Loadbalancer-650 { if match all { source-address 0.0.0.0/0; destination-address 198.207.33.128/25;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-650 ;}}
+entry Loadbalancer-655 { if match all { source-address 0.0.0.0/0; destination-address 199.249.18.64/28;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-655 ;}}
+entry Loadbalancer-660 { if match all { source-address 0.0.0.0/0; destination-address 199.249.19.0/28;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-660 ;}}
+entry Loadbalancer-665 { if match all { source-address 0.0.0.0/0; destination-address 204.52.200.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-665 ;}}
+entry Loadbalancer-670 { if match all { source-address 0.0.0.0/0; destination-address 204.52.201.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-670 ;}}
+entry Loadbalancer-675 { if match all { source-address 0.0.0.0/0; destination-address 204.61.92.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-675 ;}}
+entry Loadbalancer-680 { if match all { source-address 0.0.0.0/0; destination-address 204.61.93.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Loadbalancer-680 ;}}
+
+
+
+
+# remark   class2_data_center
+# remark   Bedminster
+entry Bedminster-5 { if match all { source-address 0.0.0.0/0; destination-address 10.174.132.0/23;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Bedminster-5 ;}}
+entry Bedminster-10 { if match all { source-address 10.174.132.0/23; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Bedminster-10 ;}}
+entry Bedminster-15 { if match all { source-address 0.0.0.0/0; destination-address 10.174.158.0/23;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Bedminster-15 ;}}
+entry Bedminster-20 { if match all { source-address 10.174.158.0/23; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Bedminster-20 ;}}
+# remark   Alpharetta
+entry Alpharetta-5 { if match all { source-address 0.0.0.0/0; destination-address 10.191.134.0/23;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Alpharetta-5 ;}}
+entry Alpharetta-10 { if match all { source-address 10.191.134.0/23; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Alpharetta-10 ;}}
+entry Alpharetta-15 { if match all { source-address 0.0.0.0/0; destination-address 10.191.138.0/23;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Alpharetta-15 ;}}
+entry Alpharetta-20 { if match all { source-address 10.191.138.0/23; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Alpharetta-20 ;}}
+entry Alpharetta-25 { if match all { source-address 0.0.0.0/0; destination-address 10.191.128.64/27;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Alpharetta-25 ;}}
+entry Alpharetta-30 { if match all { source-address 10.191.128.64/27; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Alpharetta-30 ;}}
+entry Alpharetta-35 { if match all { source-address 0.0.0.0/0; destination-address 10.191.130.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Alpharetta-35 ;}}
+entry Alpharetta-40 { if match all { source-address 10.191.130.0/24; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Alpharetta-40 ;}}
+entry Alpharetta-45 { if match all { source-address 0.0.0.0/0; destination-address 10.191.176.0/23;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Alpharetta-45 ;}}
+entry Alpharetta-50 { if match all { source-address 10.191.176.0/23; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Alpharetta-50 ;}}
+entry Alpharetta-55 { if match all { source-address 0.0.0.0/0; destination-address 10.191.129.0/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Alpharetta-55 ;}}
+entry Alpharetta-60 { if match all { source-address 10.191.129.0/26; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Alpharetta-60 ;}}
+entry Alpharetta-65 { if match all { source-address 0.0.0.0/0; destination-address 10.191.129.64/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Alpharetta-65 ;}}
+entry Alpharetta-70 { if match all { source-address 10.191.129.64/26; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Alpharetta-70 ;}}
+entry Alpharetta-75 { if match all { source-address 0.0.0.0/0; destination-address 10.191.0.0/18;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Alpharetta-75 ;}}
+entry Alpharetta-80 { if match all { source-address 10.191.0.0/18; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 28 ; count Alpharetta-80 ;}}
+
+
+
+
+
+
+
+# remark   desktop.proxy.vzwcorp.com
+entry desktop.proxy.vzwcorp.com-5 { if match all { source-address 0.0.0.0/0; destination-address 153.114.156.16/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count desktop.proxy.vzwcorp.com-5 ;}}
+entry desktop.proxy.vzwcorp.com-10 { if match all { source-address 0.0.0.0/0; destination-address 153.114.220.16/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count desktop.proxy.vzwcorp.com-10 ;}}
+entry desktop.proxy.vzwcorp.com-15 { if match all { source-address 0.0.0.0/0; destination-address 153.114.253.16/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count desktop.proxy.vzwcorp.com-15 ;}}
+# remark   tpaproxy.verizon.com
+entry tpaproxy.verizon.com-5 { if match all { source-address 0.0.0.0/0; destination-address 138.83.65.225/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count tpaproxy.verizon.com-5 ;}}
+# remark   sacproxy.verizon.com
+entry sacproxy.verizon.com-5 { if match all { source-address 0.0.0.0/0; destination-address 138.83.161.241/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count sacproxy.verizon.com-5 ;}}
+# remark   fdcproxy.verizon.com
+entry fdcproxy.verizon.com-5 { if match all { source-address 0.0.0.0/0; destination-address 140.108.3.33/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count fdcproxy.verizon.com-5 ;}}
+# remark   fhdcproxy.verizon.com
+entry fhdcproxy.verizon.com-5 { if match all { source-address 0.0.0.0/0; destination-address 148.131.15.33/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count fhdcproxy.verizon.com-5 ;}}
+
+
+
+
+# remark   exchange
+# remark   casbed.vzwcorp.com
+entry casbed.vzwcorp.com-5 { if match all { source-address 0.0.0.0/0; destination-address 10.174.187.30/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count casbed.vzwcorp.com-5 ;}}
+entry casbed.vzwcorp.com-10 { if match all { source-address 10.174.187.30/32; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count casbed.vzwcorp.com-10 ;}}
+# remark   casobg.vzwcorp.com
+entry casobg.vzwcorp.com-5 { if match all { source-address 0.0.0.0/0; destination-address 10.170.61.61/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count casobg.vzwcorp.com-5 ;}}
+entry casobg.vzwcorp.com-10 { if match all { source-address 10.170.61.61/32; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count casobg.vzwcorp.com-10 ;}}
+# remark   casretail.tdc.vzwcorp.com
+entry casretail.tdc.vzwcorp.com-5 { if match all { source-address 0.0.0.0/0; destination-address 10.144.60.225/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count casretail.tdc.vzwcorp.com-5 ;}}
+entry casretail.tdc.vzwcorp.com-10 { if match all { source-address 10.144.60.225/32; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count casretail.tdc.vzwcorp.com-10 ;}}
+# remark   casalp.vzwcorp.com
+entry casalp.vzwcorp.com-5 { if match all { source-address 0.0.0.0/0; destination-address 10.191.174.30/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count casalp.vzwcorp.com-5 ;}}
+entry casalp.vzwcorp.com-10 { if match all { source-address 10.191.174.30/32; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count casalp.vzwcorp.com-10 ;}}
+# remark   outlook-sac.uswin.ad
+entry outlook-sac.uswin.ad-5 { if match all { source-address 0.0.0.0/0; destination-address 10.11.61.61/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count outlook-sac.uswin.ad-5 ;}}
+entry outlook-sac.uswin.ad-10 { if match all { source-address 10.11.61.61/32; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count outlook-sac.uswin.ad-10 ;}}
+# remark   outlook-twi.uswin.ad
+entry outlook-twi.uswin.ad-5 { if match all { source-address 0.0.0.0/0; destination-address 10.144.61.61/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count outlook-twi.uswin.ad-5 ;}}
+entry outlook-twi.uswin.ad-10 { if match all { source-address 10.144.61.61/32; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count outlook-twi.uswin.ad-10 ;}}
+# remark   freeholdcas.verizon.com
+entry freeholdcas.verizon.com-5 { if match all { source-address 0.0.0.0/0; destination-address 148.131.9.132/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count freeholdcas.verizon.com-5 ;}}
+entry freeholdcas.verizon.com-10 { if match all { source-address 148.131.9.132/32; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count freeholdcas.verizon.com-10 ;}}
+# remark   fairlandcas.verizon.com
+entry fairlandcas.verizon.com-5 { if match all { source-address 0.0.0.0/0; destination-address 148.131.27.212/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count fairlandcas.verizon.com-5 ;}}
+entry fairlandcas.verizon.com-10 { if match all { source-address 148.131.27.212/32; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count fairlandcas.verizon.com-10 ;}}
+
+
+
+# remark   guest-wif match alli
+# remark   TDC-Contoller
+entry TDC-Contoller-5 { if match all { source-address 0.0.0.0/0; destination-address 10.144.226.20/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 0 ; count TDC-Contoller-5 ;}}
+entry TDC-Contoller-10 { if match all { source-address 0.0.0.0/0; destination-address 10.144.226.21/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 0 ; count TDC-Contoller-10 ;}}
+entry TDC-Contoller-15 { if match all { source-address 0.0.0.0/0; destination-address 10.144.226.22/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 0 ; count TDC-Contoller-15 ;}}
+# remark   SDC-Controller
+entry SDC-Controller-5 { if match all { source-address 0.0.0.0/0; destination-address 10.11.226.20/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 0 ; count SDC-Controller-5 ;}}
+entry SDC-Controller-10 { if match all { source-address 0.0.0.0/0; destination-address 10.11.226.21/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 0 ; count SDC-Controller-10 ;}}
+entry SDC-Controller-15 { if match all { source-address 0.0.0.0/0; destination-address 10.11.226.22/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 0 ; count SDC-Controller-15 ;}}
+# remark   ODC-Controller
+entry ODC-Controller-5 { if match all { source-address 0.0.0.0/0; destination-address 10.170.226.20/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 0 ; count ODC-Controller-5 ;}}
+entry ODC-Controller-10 { if match all { source-address 0.0.0.0/0; destination-address 10.170.226.21/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 0 ; count ODC-Controller-10 ;}}
+entry ODC-Controller-15 { if match all { source-address 0.0.0.0/0; destination-address 10.170.226.22/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 0 ; count ODC-Controller-15 ;}}
+
+
+
+# remark   mocana_proxy
+# remark   mocana.proxy
+entry mocana.proxy-5 { if match all { source-address 0.0.0.0/0; destination-address 153.114.156.20/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count mocana.proxy-5 ;}}
+entry mocana.proxy-10 { if match all { source-address 0.0.0.0/0; destination-address 153.114.220.20/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count mocana.proxy-10 ;}}
+entry mocana.proxy-15 { if match all { source-address 0.0.0.0/0; destination-address 153.114.253.20/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count mocana.proxy-15 ;}}
+
+
+
+# remark   mocana-retail.
+
+entry mocana-retail.proxy-5 { if match all { source-address 0.0.0.0/0; destination-address 153.114.156.22/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count mocana-retail.proxy-5 ;}}
+entry mocana-retail.proxy-10 { if match all { source-address 0.0.0.0/0; destination-address 153.114.220.22/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count mocana-retail.proxy-10 ;}}
+entry mocana-retail.proxy-15 { if match all { source-address 0.0.0.0/0; destination-address 153.114.253.22/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count mocana-retail.proxy-15 ;}}
+
+
+
+
+# remark   nms_subnets
+# remark   nms-subnets
+entry nms-subnets-5 { if match all { source-address 0.0.0.0/0; destination-address 138.83.165.0/26;} then { permit ; qosprofile qp7 ; replace-dscp-value 16 ; count nms-subnets-5 ;}}
+entry nms-subnets-10 { if match all { source-address 0.0.0.0/0; destination-address 138.83.67.0/25;} then { permit ; qosprofile qp7 ; replace-dscp-value 16 ; count nms-subnets-10 ;}}
+entry nms-subnets-15 { if match all { source-address 0.0.0.0/0; destination-address 161.128.192.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 16 ; count nms-subnets-15 ;}}
+entry nms-subnets-20 { if match all { source-address 0.0.0.0/0; destination-address 166.68.192.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 16 ; count nms-subnets-20 ;}}
+entry nms-subnets-25 { if match all { source-address 0.0.0.0/0; destination-address 166.68.224.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 16 ; count nms-subnets-25 ;}}
+# remark   ODC-NMS
+entry ODC-NMS-5 { if match all { source-address 0.0.0.0/0; destination-address 162.115.200.0/23;} then { permit ; qosprofile qp7 ; replace-dscp-value 16 ; count ODC-NMS-5 ;}}
+entry ODC-NMS-10 { if match all { source-address 0.0.0.0/0; destination-address 162.115.202.0/23;} then { permit ; qosprofile qp7 ; replace-dscp-value 16 ; count ODC-NMS-10 ;}}
+# remark   SDC-NMS
+entry SDC-NMS-5 { if match all { source-address 0.0.0.0/0; destination-address 162.115.8.0/23;} then { permit ; qosprofile qp7 ; replace-dscp-value 16 ; count SDC-NMS-5 ;}}
+entry SDC-NMS-10 { if match all { source-address 0.0.0.0/0; destination-address 162.115.10.0/23;} then { permit ; qosprofile qp7 ; replace-dscp-value 16 ; count SDC-NMS-10 ;}}
+# remark   DDC-NMS
+entry DDC-NMS-5 { if match all { source-address 0.0.0.0/0; destination-address 162.115.72.0/23;} then { permit ; qosprofile qp7 ; replace-dscp-value 16 ; count DDC-NMS-5 ;}}
+entry DDC-NMS-10 { if match all { source-address 0.0.0.0/0; destination-address 162.115.74.0/23;} then { permit ; qosprofile qp7 ; replace-dscp-value 16 ; count DDC-NMS-10 ;}}
+# remark   TDC-NMS
+entry TDC-NMS-5 { if match all { source-address 0.0.0.0/0; destination-address 137.188.72.0/23;} then { permit ; qosprofile qp7 ; replace-dscp-value 16 ; count TDC-NMS-5 ;}}
+entry TDC-NMS-10 { if match all { source-address 0.0.0.0/0; destination-address 137.188.74.0/23;} then { permit ; qosprofile qp7 ; replace-dscp-value 16 ; count TDC-NMS-10 ;}}
+
+
+
+
+# remark   pac_proxy
+# remark   pac.proxy.vzwcorp.com
+entry pac.proxy.vzwcorp.com-5 { if match all { source-address 0.0.0.0/0; destination-address 153.114.156.50/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count pac.proxy.vzwcorp.com-5 ;}}
+entry pac.proxy.vzwcorp.com-10 { if match all { source-address 0.0.0.0/0; destination-address 153.114.220.50/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count pac.proxy.vzwcorp.com-10 ;}}
+entry pac.proxy.vzwcorp.com-15 { if match all { source-address 0.0.0.0/0; destination-address 153.114.253.50/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count pac.proxy.vzwcorp.com-15 ;}}
+
+
+
+# remark   pos_proxy
+# remark   iosmobile.proxy.vzwcorp.com
+entry iosmobile.proxy.vzwcorp.com-5 { if match all { source-address 0.0.0.0/0; destination-address 153.114.156.19/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count iosmobile.proxy.vzwcorp.com-5 ;}}
+entry iosmobile.proxy.vzwcorp.com-10 { if match all { source-address 0.0.0.0/0; destination-address 153.114.220.19/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count iosmobile.proxy.vzwcorp.com-10 ;}}
+entry iosmobile.proxy.vzwcorp.com-15 { if match all { source-address 0.0.0.0/0; destination-address 153.114.253.19/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count iosmobile.proxy.vzwcorp.com-15 ;}}
+
+
+# remark   retail_proxy
+# remark   kiosks.proxy.vzwcorp.com
+entry kiosks.proxy.vzwcorp.com-5 { if match all { source-address 0.0.0.0/0; destination-address 153.114.156.18/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count kiosks.proxy.vzwcorp.com-5 ;}}
+entry kiosks.proxy.vzwcorp.com-10 { if match all { source-address 0.0.0.0/0; destination-address 153.114.220.18/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count kiosks.proxy.vzwcorp.com-10 ;}}
+entry kiosks.proxy.vzwcorp.com-15 { if match all { source-address 0.0.0.0/0; destination-address 153.114.253.18/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count kiosks.proxy.vzwcorp.com-15 ;}}
+
+
+
+# remark   Northeast
+# remark   NJBED01CMDP01
+entry NJBED01CMDP01-5 { if match all { source-address 0.0.0.0/0; destination-address 10.174.132.37/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count NJBED01CMDP01-5 ;}}
+entry NJBED01CMDP01-10 { if match all { source-address 10.174.132.37/32; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count NJBED01CMDP01-10 ;}}
+# remark   MDLAU01CMDP01
+entry MDLAU01CMDP01-5 { if match all { source-address 0.0.0.0/0; destination-address 10.174.159.245/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count MDLAU01CMDP01-5 ;}}
+entry MDLAU01CMDP01-10 { if match all { source-address 10.174.159.245/32; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count MDLAU01CMDP01-10 ;}}
+# remark   NYOBG01CMSR01
+entry NYOBG01CMSR01-5 { if match all { source-address 0.0.0.0/0; destination-address 10.170.34.159/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count NYOBG01CMSR01-5 ;}}
+entry NYOBG01CMSR01-10 { if match all { source-address 10.170.34.159/32; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count NYOBG01CMSR01-10 ;}}
+# remark   NYOGBRVMCMMP01
+entry NYOGBRVMCMMP01-5 { if match all { source-address 0.0.0.0/0; destination-address 10.170.34.162/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count NYOGBRVMCMMP01-5 ;}}
+entry NYOGBRVMCMMP01-10 { if match all { source-address 10.170.34.162/32; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count NYOGBRVMCMMP01-10 ;}}
+# remark   NYOGBRVMCMSP01
+entry NYOGBRVMCMSP01-5 { if match all { source-address 0.0.0.0/0; destination-address 10.170.34.164/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count NYOGBRVMCMSP01-5 ;}}
+entry NYOGBRVMCMSP01-10 { if match all { source-address 10.170.34.164/32; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count NYOGBRVMCMSP01-10 ;}}
+# remark   Midwest
+# remark   OHDUB01CMSR01
+entry OHDUB01CMSR01-5 { if match all { source-address 0.0.0.0/0; destination-address 10.144.209.195/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count OHDUB01CMSR01-5 ;}}
+entry OHDUB01CMSR01-10 { if match all { source-address 10.144.209.195/32; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count OHDUB01CMSR01-10 ;}}
+# remark   OHTWB1PDP001
+entry OHTWB1PDP001-5 { if match all { source-address 0.0.0.0/0; destination-address 10.144.208.152/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count OHTWB1PDP001-5 ;}}
+entry OHTWB1PDP001-10 { if match all { source-address 10.144.208.152/32; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count OHTWB1PDP001-10 ;}}
+# remark   OHTW1CMP004
+entry OHTW1CMP004-5 { if match all { source-address 0.0.0.0/0; destination-address 10.144.211.198/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count OHTW1CMP004-5 ;}}
+entry OHTW1CMP004-10 { if match all { source-address 10.144.211.198/32; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count OHTW1CMP004-10 ;}}
+# remark   OHTW1CSP002
+entry OHTW1CSP002-5 { if match all { source-address 0.0.0.0/0; destination-address 10.144.211.199/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count OHTW1CSP002-5 ;}}
+entry OHTW1CSP002-10 { if match all { source-address 10.144.211.199/32; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count OHTW1CSP002-10 ;}}
+# remark   West
+# remark   CAWNCK02CMSR01
+entry CAWNCK02CMSR01-5 { if match all { source-address 0.0.0.0/0; destination-address 10.20.23.118/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count CAWNCK02CMSR01-5 ;}}
+entry CAWNCK02CMSR01-10 { if match all { source-address 10.20.23.118/32; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count CAWNCK02CMSR01-10 ;}}
+# remark   HIHNLL01CMDP01
+entry HIHNLL01CMDP01-5 { if match all { source-address 0.0.0.0/0; destination-address 10.28.22.27/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count HIHNLL01CMDP01-5 ;}}
+entry HIHNLL01CMDP01-10 { if match all { source-address 10.28.22.27/32; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count HIHNLL01CMDP01-10 ;}}
+# remark   CARCRDVMCMDP01
+entry CARCRDVMCMDP01-5 { if match all { source-address 0.0.0.0/0; destination-address 10.11.210.74/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count CARCRDVMCMDP01-5 ;}}
+entry CARCRDVMCMDP01-10 { if match all { source-address 10.11.210.74/32; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count CARCRDVMCMDP01-10 ;}}
+# remark   CASAC1PDP001
+entry CASAC1PDP001-5 { if match all { source-address 0.0.0.0/0; destination-address 10.11.208.210/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count CASAC1PDP001-5 ;}}
+entry CASAC1PDP001-10 { if match all { source-address 10.11.208.210/32; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count CASAC1PDP001-10 ;}}
+# remark   CASAC1CMP003
+entry CASAC1CMP003-5 { if match all { source-address 0.0.0.0/0; destination-address 10.11.211.94/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count CASAC1CMP003-5 ;}}
+entry CASAC1CMP003-10 { if match all { source-address 10.11.211.94/32; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count CASAC1CMP003-10 ;}}
+# remark   CASAC1CSP001
+entry CASAC1CSP001-5 { if match all { source-address 0.0.0.0/0; destination-address 10.11.211.95/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count CASAC1CSP001-5 ;}}
+entry CASAC1CSP001-10 { if match all { source-address 10.11.211.95/32; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 10 ; count CASAC1CSP001-10 ;}}
+
+
+# remark   secure_vendor
+# remark   svz-cc.proxy.vzwcorp.com
+entry svz-cc.proxy.vzwcorp.com-5 { if match all { source-address 0.0.0.0/0; destination-address 153.114.156.21/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count svz-cc.proxy.vzwcorp.com-5 ;}}
+entry svz-cc.proxy.vzwcorp.com-10 { if match all { source-address 0.0.0.0/0; destination-address 153.114.220.21/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count svz-cc.proxy.vzwcorp.com-10 ;}}
+entry svz-cc.proxy.vzwcorp.com-15 { if match all { source-address 0.0.0.0/0; destination-address 153.114.253.21/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count svz-cc.proxy.vzwcorp.com-15 ;}}
+
+
+# remark   web_proxy
+# remark   server.proxy.vzwcorp.com
+entry server.proxy.vzwcorp.com-5 { if match all { source-address 0.0.0.0/0; destination-address 153.114.156.17/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count server.proxy.vzwcorp.com-5 ;}}
+entry server.proxy.vzwcorp.com-10 { if match all { source-address 0.0.0.0/0; destination-address 153.114.220.17/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count server.proxy.vzwcorp.com-10 ;}}
+entry server.proxy.vzwcorp.com-15 { if match all { source-address 0.0.0.0/0; destination-address 153.114.253.17/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count server.proxy.vzwcorp.com-15 ;}}
+
+
+# remark   edge_stream_vid
+# remark   SDC-AS-GDA
+entry SDC-AS-GDA-5 { if match all { source-address 0.0.0.0/0; destination-address 239.192.0.0/16;} then { permit ; qosprofile qp7 ; replace-dscp-value 34 ; count SDC-AS-GDA-5 ;}}
+entry SDC-AS-GDA-10 { if match all { source-address 239.192.0.0/16; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 34 ; count SDC-AS-GDA-10 ;}}
+# remark   DDC-AS-GDA
+entry DDC-AS-GDA-5 { if match all { source-address 0.0.0.0/0; destination-address 239.193.0.0/16;} then { permit ; qosprofile qp7 ; replace-dscp-value 34 ; count DDC-AS-GDA-5 ;}}
+entry DDC-AS-GDA-10 { if match all { source-address 239.193.0.0/16; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 34 ; count DDC-AS-GDA-10 ;}}
+# remark   ODC-AS-GDA
+entry ODC-AS-GDA-5 { if match all { source-address 0.0.0.0/0; destination-address 239.194.0.0/16;} then { permit ; qosprofile qp7 ; replace-dscp-value 34 ; count ODC-AS-GDA-5 ;}}
+entry ODC-AS-GDA-10 { if match all { source-address 239.194.0.0/16; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 34 ; count ODC-AS-GDA-10 ;}}
+# remark   TDC-AS-GDA
+entry TDC-AS-GDA-5 { if match all { source-address 0.0.0.0/0; destination-address 239.200.0.0/16;} then { permit ; qosprofile qp7 ; replace-dscp-value 34 ; count TDC-AS-GDA-5 ;}}
+entry TDC-AS-GDA-10 { if match all { source-address 239.200.0.0/16; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 34 ; count TDC-AS-GDA-10 ;}}
+# remark   WEST-VRF-GDA
+entry WEST-VRF-GDA-5 { if match all { source-address 0.0.0.0/0; destination-address 239.196.0.0/16;} then { permit ; qosprofile qp7 ; replace-dscp-value 34 ; count WEST-VRF-GDA-5 ;}}
+entry WEST-VRF-GDA-10 { if match all { source-address 239.196.0.0/16; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 34 ; count WEST-VRF-GDA-10 ;}}
+# remark   MIDWEST-VRF-GDA
+entry MIDWEST-VRF-GDA-5 { if match all { source-address 0.0.0.0/0; destination-address 239.197.0.0/16;} then { permit ; qosprofile qp7 ; replace-dscp-value 34 ; count MIDWEST-VRF-GDA-5 ;}}
+entry MIDWEST-VRF-GDA-10 { if match all { source-address 239.197.0.0/16; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 34 ; count MIDWEST-VRF-GDA-10 ;}}
+# remark   SOUTH-VRF-GDA
+entry SOUTH-VRF-GDA-5 { if match all { source-address 0.0.0.0/0; destination-address 239.198.0.0/16;} then { permit ; qosprofile qp7 ; replace-dscp-value 34 ; count SOUTH-VRF-GDA-5 ;}}
+entry SOUTH-VRF-GDA-10 { if match all { source-address 239.198.0.0/16; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 34 ; count SOUTH-VRF-GDA-10 ;}}
+# remark   NORTHEAST-VRF-GDA
+entry NORTHEAST-VRF-GDA-5 { if match all { source-address 0.0.0.0/0; destination-address 239.199.0.0/16;} then { permit ; qosprofile qp7 ; replace-dscp-value 34 ; count NORTHEAST-VRF-GDA-5 ;}}
+entry NORTHEAST-VRF-GDA-10 { if match all { source-address 239.199.0.0/16; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 34 ; count NORTHEAST-VRF-GDA-10 ;}}
+# remark   Hi-Def-TV
+entry Hi-Def-TV-5 { if match all { source-address 0.0.0.0/0; destination-address 227.1.1.0/24;} then { permit ; qosprofile qp7 ; replace-dscp-value 34 ; count Hi-Def-TV-5 ;}}
+entry Hi-Def-TV-10 { if match all { source-address 227.1.1.0/24; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 34 ; count Hi-Def-TV-10 ;}}
+
+
+
+
+# remark   ucce
+# remark   UCCE-CTI-OS-SRV
+entry UCCE-CTI-OS-SRV-5 { if match all { protocol tcp; source-address 0.0.0.0/0; source-port 42028; destination-address 0.0.0.0/0;} then {permit ; qosprofile qp7 ; replace-dscp-value 24 ; count UCCE-CTI-OS-SRV-5 ;}}
+entry UCCE-CTI-OS-SRV-10 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0; destination-port 42028;} then {permit ; qosprofile qp7 ; replace-dscp-value 24 ; count UCCE-CTI-OS-SRV-10 ;}}
+
+# remark   edge_voip
+# remark   RTP-DSCP-EF
+entry RTP-DSCP-EF-5 { if match all { protocol udp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0; destination-port 16384-32767; dscp 46;} then { permit ; qosprofile qp5 ; replace-dscp-value 46 ; count RTP-DSCP-EF-5 ;}}
+entry RTP-DSCP-EF-10 { if match all { protocol udp; source-address 0.0.0.0/0; source-port 16384-32767; destination-address 0.0.0.0/0; dscp 46;} then { permit ; qosprofile qp5 ; replace-dscp-value 46 ; count RTP-DSCP-EF10 ;}}
+
+
+
+# remark   edge_video
+# remark   RTP
+entry RTP-5 { if match all { protocol udp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0; destination-port 16384-32767; dscp 34;} then { permit ; qosprofile qp7 ; replace-dscp-value 34 ; count RTP-5 ;}}
+entry RTP-10 { if match all { protocol udp; source-address 0.0.0.0/0; source-port 16384-32767; destination-address 0.0.0.0/0; dscp 34;} then { permit ; qosprofile qp7 ; replace-dscp-value 34 ; count RTP-10 ;}}
+
+
+# remark   core-protect
+# remark   Laptop-BACKUP
+entry Laptop-BACKUP-5 { if match all { protocol udp; source-address 0.0.0.0/0; source-port 11577; destination-address 0.0.0.0/0; dscp 22;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count Laptop-BACKUP-5 ;}}
+entry Laptop-BACKUP-10 { if match all { protocol udp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0; destination-port 11577; dscp 22;} then { permit ; qosprofile qp7 ; replace-dscp-value 22 ; count Laptop-BACKUP-10 ;}}
+
+
+
+
+
+# remark   nms-tacacs
+entry nms-tacacs-5 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 138.83.165.16/32; destination-port 49;} then { permit ; qosprofile qp7 ; replace-dscp-value 16 ; count nms-tacacs-5 ;}}
+entry nms-tacacs-10 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 138.83.67.3/32; destination-port 49;} then { permit ; qosprofile qp7 ; replace-dscp-value 16 ; count nms-tacacs-10 ;}}
+entry nms-tacacs-15 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 166.68.195.13/32; destination-port 49;} then { permit ; qosprofile qp7 ; replace-dscp-value 16 ; count nms-tacacs-15 ;}}
+entry nms-tacacs-20 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 166.68.227.41/32; destination-port 49;} then { permit ; qosprofile qp7 ; replace-dscp-value 16 ; count nms-tacacs-20 ;}}
+entry nms-tacacs-25 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 161.128.136.115/32; destination-port 49;} then { permit ; qosprofile qp7 ; replace-dscp-value 16 ; count nms-tacacs-25 ;}}
+
+
+# remark   nms_radius
+# remark   nms-radius
+entry nms-radius-5 { if match all { protocol udp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0; destination-port 1645-1646;} then { permit ; qosprofile qp7 ; replace-dscp-value 16 ; count nms-radius-5 ;}}
+entry nms-radius-10 { if match all { protocol udp; source-address 0.0.0.0/0; source-port 1645-1646; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 16 ; count nms-radius-10 ;}}
+entry nms-radius-15 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0; destination-port 1645-1646;} then { permit ; qosprofile qp7 ; replace-dscp-value 16 ; count nms-radius-15 ;}}
+entry nms-radius-20 { if match all { protocol tcp; source-address 0.0.0.0/0; source-port 1645-1646; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 16 ; count nms-radius-20 ;}}
+entry nms-radius-25 { if match all { protocol udp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0; destination-port 1812-1813;} then { permit ; qosprofile qp7 ; replace-dscp-value 16 ; count nms-radius-25 ;}}
+entry nms-radius-30 { if match all { protocol udp; source-address 0.0.0.0/0; source-port 1812-1813; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 16 ; count nms-radius-30 ;}}
+
+
+
+# remark   peer_video
+# remark   RTP-PROT-W-DSCP-0
+entry RTP-PROT-W-DSCP-0-5 { if match all { protocol udp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0; destination-port 16384-32767;} then { permit ; qosprofile qp7 ; replace-dscp-value 0 ; count RTP-PROT-W-DSCP-0-5 ;}}
+entry RTP-PROT-W-DSCP-0-10 { if match all { protocol udp; source-address 0.0.0.0/0; source-port 16384-32767; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 0 ; count RTP-PROT-W-DSCP-0-10 ;}}
+
+
+
+# remark   m_edge_video_brocadcast
+# remark   VzW-BROACAST-SUBNET
+entry VzW-BROACAST-SUBNET-5 { if match all { protocol tcp; source-address 10.171.18.0/24; destination-address 0.0.0.0/0;} then {   permit ; qosprofile qp7 ; replace-dscp-value 32 ; count VzW-BROACAST-SUBNET-5 ;}}
+entry VzW-BROACAST-SUBNET-10 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 10.171.18.0/24;} then {   permit ; qosprofile qp7 ; replace-dscp-value 32 ; count VzW-BROACAST-SUBNET-10 ;}}
+entry VzW-BROACAST-SUBNET-15 { if match all { protocol udp; source-address 0.0.0.0/0; destination-address 10.171.18.0/24; destination-port 6000-10000;} then { permit ; qosprofile qp7 ; replace-dscp-value 32 ; count VzW-BROACAST-SUBNET-15 ;}}
+entry VzW-BROACAST-SUBNET-20 { if match all { protocol udp; source-address 10.171.18.0/24; destination-address 0.0.0.0/0; destination-port 6000-10000;} then { permit ; qosprofile qp7 ; replace-dscp-value 32 ; count VzW-BROACAST-SUBNET-20 ;}}
+entry VzW-BROACAST-SUBNET-25 { if match all { protocol tcp; source-address 148.132.6.0/25; destination-address 0.0.0.0/0;} then {   permit ; qosprofile qp7 ; replace-dscp-value 32 ; count VzW-BROACAST-SUBNET-25 ;}}
+entry VzW-BROACAST-SUBNET-30 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 148.132.6.0/25;} then {   permit ; qosprofile qp7 ; replace-dscp-value 32 ; count VzW-BROACAST-SUBNET-30 ;}}
+entry VzW-BROACAST-SUBNET-35 { if match all { protocol udp; source-address 0.0.0.0/0; destination-address 148.132.6.0/25; destination-port 6000-10000;} then { permit ; qosprofile qp7 ; replace-dscp-value 32 ; count VzW-BROACAST-SUBNET-35 ;}}
+entry VzW-BROACAST-SUBNET-40 { if match all { protocol udp; source-address 148.132.6.0/25; destination-address 0.0.0.0/0; destination-port 6000-10000;} then { permit ; qosprofile qp7 ; replace-dscp-value 32 ; count VzW-BROACAST-SUBNET-40 ;}}
+
+
+
+# remark   edge-desktop-mgt
+# remark   Marimba
+entry Marimba-5 { if match all { protocol tcp; source-address 0.0.0.0/0; source-port 5282; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp6 ; replace-dscp-value 10 ; count Marimba-5 ;}}
+entry Marimba-10 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0; destination-port 5282;} then { permit ; qosprofile qp6 ; replace-dscp-value 10 ; count Marimba-10 ;}}
+
+# remark   edge_video_ebu_gre
+# remark   FDC-EHNET-TELEPROD-TNL2
+entry FDC-EHNET-TELEPROD-TNL2-5 { if match all { protocol 47; source-address 166.68.50.2/32; destination-address 192.112.55.12/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 32 ; count FDC-EHNET-TELEPROD-TNL2-5 ;}}
+entry FDC-EHNET-TELEPROD-TNL2-10 { if match all { protocol 47; source-address 192.112.55.12/32; destination-address 166.68.50.2/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 32 ; count FDC-EHNET-TELEPROD-TNL2-10 ;}}
+# remark   Tampa-EHNET-CRDT-TNL
+entry Tampa-EHNET-CRDT-TNL-5 { if match all { protocol 47; source-address 138.83.79.21/32; destination-address 199.116.18.252/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 32 ; count Tampa-EHNET-CRDT-TNL-5 ;}}
+entry Tampa-EHNET-CRDT-TNL-10 { if match all { protocol 47; source-address 199.116.18.252/32; destination-address 138.83.79.21/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 32 ; count Tampa-EHNET-CRDT-TNL-10 ;}}
+# remark   Tampa-EHNET-VDSA-3
+entry Tampa-EHNET-VDSA-3-5 { if match all { protocol 47; source-address 138.83.79.21/32; destination-address 114.9.95.6/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 32 ; count Tampa-EHNET-VDSA-3-5 ;}}
+entry Tampa-EHNET-VDSA-3-10 { if match all { protocol 47; source-address 114.9.95.6/32; destination-address 138.83.79.21/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 32 ; count Tampa-EHNET-VDSA-3-10 ;}}
+# remark   SAC-EHNET-VDSI-CHEN
+entry SAC-EHNET-VDSI-CHEN-5 { if match all { protocol 47; source-address 138.83.175.24/32; destination-address 114.9.191.6/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 32 ; count SAC-EHNET-VDSI-CHEN-5 ;}}
+entry SAC-EHNET-VDSI-CHEN-10 { if match all { protocol 47; source-address 114.9.191.6/32; destination-address 138.83.175.24/32;} then { permit ; qosprofile qp7 ; replace-dscp-value 32 ; count SAC-EHNET-VDSI-CHEN-10 ;}}
+
+
+# remark  edge_voip_video
+# remark  SCCP-Prot
+entry SCCP-Prot-5 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0; destination-port 2000-2002;} then { permit ; qosprofile qp7 ; replace-dscp-value 24 ; count SCCP-Prot-5 ;}}
+entry SCCP-Prot-10 { if match all { protocol tcp; source-address 0.0.0.0/0; source-port 2000-2002; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 24 ; count SCCP-Prot-10 ;}}
+# remark  Secure-SCCP
+entry Secure-SCCP-5 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0; destination-port 2443;} then { permit ; qosprofile qp7 ; replace-dscp-value 24 ; count Secure-SCCP-5 ;}}
+entry Secure-SCCP-10 { if match all { protocol tcp; source-address 0.0.0.0/0; source-port 2443; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 24 ; count Secure-SCCP-10 ;}}
+# remark  H323-Prot
+entry H323-Prot-5 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0; destination-port 1719-1720;} then { permit ; qosprofile qp7 ; replace-dscp-value 24 ; count H323-Prot-5 ;}}
+entry H323-Prot-10 { if match all { protocol tcp; source-address 0.0.0.0/0; source-port 1719-1720; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 24 ; count H323-Prot-10 ;}}
+# remark  MGCP-PROT
+entry MGCP-PROT-5 { if match all { protocol udp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0; destination-port 2427;} then { permit ; qosprofile qp7 ; replace-dscp-value 24 ; count MGCP-PROT-5 ;}}
+entry MGCP-PROT-10 { if match all { protocol udp; source-address 0.0.0.0/0; source-port 2427; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 24 ; count MGCP-PROT-10 ;}}
+entry MGCP-PROT-15 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0; destination-port 2428;} then { permit ; qosprofile qp7 ; replace-dscp-value 24 ; count MGCP-PROT-15 ;}}
+entry MGCP-PROT-20 { if match all { protocol tcp; source-address 0.0.0.0/0; source-port 2428; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 24 ; count MGCP-PROT-20 ;}}
+# remark  SIP-PROT
+entry SIP-PROT-5 { if match all { protocol tcp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0; destination-port 5060-5061;} then { permit ; qosprofile qp7 ; replace-dscp-value 24 ; count SIP-PROT-5 ;}}
+entry SIP-PROT-10 { if match all { protocol tcp; source-address 0.0.0.0/0; source-port 5060-5061; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 24 ; count SIP-PROT-10 ;}}
+entry SIP-PROT-15 { if match all { protocol udp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0; destination-port 5060-5061;} then { permit ; qosprofile qp7 ; replace-dscp-value 24 ; count SIP-PROT-15 ;}}
+entry SIP-PROT-20 { if match all { protocol udp; source-address 0.0.0.0/0; source-port 5060-5061; destination-address 0.0.0.0/0;} then { permit ; qosprofile qp7 ; replace-dscp-value 24 ; count SIP-PROT-20 ;}}
+
+# remark v6nonmgmt
+entry v6nonmgmt1 { if { protocol icmpv6; source-address 0:: / 0; destination-address 0:: / 0;} then { permit;}}
+entry v6nonmgmt2 { if { protocol tcp; source-address 0:: / 0; source-port bgp; destination-address 0:: / 0;} then { permit;}}
+entry v6nonmgmt3 { if { protocol tcp; source-address 0:: / 0; destination-address 0:: / 0; destination-port bgp;} then { permit;}}
+entry v6nonmgmt4 { if { protocol ospf; source-address 0:: / 0; destination-address 0:: / 0;} then { permit;}}
+entry v6nonmgmt5 { if { protocol udp; source-address 0:: / 0; source-port 521; destination-address 0:: / 0; destination-port 521;} then { permit;}}
+entry v6nonmgmt6 { if { protocol pim; source-address 0:: / 0; destination-address 0:: / 0;} then { permit;}}
+
+
+# remark v6snmp
+entry v6snmp1 { if { ethernet-type 0x86DD; source-address 0:: / 0; destination-address 2620:0:167F:1040::/116;} then { permit;}}
+entry v6snmp2 { if { ethernet-type 0x86DD; source-address 2620:0:167F:1040::/116; destination-address 0:: / 0;} then { permit;}}
+entry v6snmp3 { if { ethernet-type 0x86DD; source-address 0:: / 0; destination-address 2620:0:167F:3004::/116;} then { permit;}}
+entry v6snmp4 { if { ethernet-type 0x86DD; source-address 2620:0:167F:3004::/116; destination-address 0:: / 0;} then { permit;}}
+entry v6snmp5 { if { ethernet-type 0x86DD; source-address 0:: / 0; destination-address 2600:80B:21:307::/116;} then { permit;}}
+entry v6snmp6 { if { ethernet-type 0x86DD; source-address 2600:80B:21:307::/116; destination-address 0:: / 0;} then { permit;}}
+entry v6snmp7 { if { ethernet-type 0x86DD; source-address 0:: / 0; destination-address 2600:80B:21:30B::/116;} then { permit;}}
+entry v6snmp8 { if { ethernet-type 0x86DD; source-address 2600:80B:21:30B::/116; destination-address 0:: / 0;} then { permit;}}
+entry v6snmp9 { if { ethernet-type 0x86DD;} then { deny;}}
+
+# remark v6vty
+entry v6vty1 { if { ethernet-type 0x86DD; source-address 2600:80B:86:12D::/116; destination-address 0:: / 0;} then { permit;}}
+entry v6vty2 { if { ethernet-type 0x86DD; source-address 2600:80B:87:149::/116; destination-address 0:: / 0;} then { permit;}}
+entry v6vty3 { if { ethernet-type 0x86DD; source-address 2600:80B:89:131::/116; destination-address 0:: / 0;} then { permit;}}
+entry v6vty4 { if { ethernet-type 0x86DD; source-address 2600:80B:88:127::/116; destination-address 0:: / 0;} then { permit;}}
+entry v6vty5 { if { ethernet-type 0x86DD;} then { deny;}}
+
+
+# remark nonmgmt
+entry nonmgmt1 { if { protocol icmp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0;} then { permit;}}
+entry nonmgmt2 { if { protocol tcp; source-address 0.0.0.0/0; source-port bgp; destination-address 0.0.0.0/0;} then { permit;}}
+entry nonmgmt3 { if { protocol tcp; source-address 0.0.0.0/0; destination-address 0.0.0.0/0; destination-port bgp;} then { permit;}}
+entry nonmgmt4 { if { protocol ospf; source-address 0.0.0.0/0; destination-address 0.0.0.0/0;} then { permit;}}
+entry nonmgmt5 { if { protocol udp; source-address 0.0.0.0/0; source-port 521; destination-address 0.0.0.0/0; destination-port 521;} then { permit;}}
+entry nonmgmt6 { if { protocol pim; source-address 0.0.0.0/0; destination-address 0.0.0.0/0;} then { permit;}}

@@ -1,0 +1,5 @@
+alias show-interface "run script interface.py"
+alias show-lag "run script showlag.py"
+alias show-ports "run script portsum.py"
+alias scp "scp2 vr VR-Default"
+alias ssh "ssh vr VR-Default"

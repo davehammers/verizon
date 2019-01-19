@@ -1,0 +1,15 @@
+- user: dave
+  password: extreme
+  level:  admin
+
+- user: neil
+  password: verizon
+  level: admin
+
+- user: tony
+  password: extreme
+  level: admin
+
+- user: jim
+  password: extreme
+  level: user

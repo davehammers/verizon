@@ -1,0 +1,15 @@
+- zone: Zone1
+  ntp:
+    primary: 10.10.10.1
+    secondary: 10.10.10.2
+  tacacs:
+    primary: 11.11.11.1
+    secondary: 11.11.11.2        
+
+- zone: Zone2
+  ntp:
+    primary: 10.10.10.1
+    secondary: 10.10.10.2
+  tacacs:
+    primary: 11.11.11.1
+    secondary: 11.11.11.2        

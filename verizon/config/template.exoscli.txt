@@ -1,0 +1,101 @@
+# list below is v7 12-13-19
+create log message "First cmds.append msg"
+enable cli scripting
+# create account admin enss password $adminpw
+configure dns-client default-domain verizon.com
+configure dns-client add domain-suffix netd.vzwcorp.com
+configure dns-client add domain-suffix verizon.com
+config vlan Default delete ports all
+# Data VLAN
+create vlan $dataVlanDesc
+configure vlan $dataVlanDesc tag $dataVlan
+configure vlan $dataVlan add ports all
+configure vlan $dataVlanDesc ipaddress $mgmtIP
+configure $dataVlanDesc ipaddress $v6mgmtIP
+# Voice VLAN
+create vlan $voiceVlanDesc
+configure vlan $voiceVlanDesc tag $voiceVlan
+configure vlan $voiceVlan add ports all tagged
+# Router config
+configure iproute add default $gatewayAddress
+configure iproute add default $v6gatewayaddr
+enable sharing 51 grouping 51-52 algorithm address-based L2 lacp
+configure ports 49 auto off speed 1000 duplex full
+configure sys-recovery-level switch reset
+create log message "2nd cmds.append msg"
+configure vlan untagged-ports auto-move inform
+configure ports 1-48 rate-limit flood broadcast 250
+create log message "Starting SNMP Config"
+config snmp sysContact "$snmpContact"
+config snmp sysLocation "$snmpLocation"
+config snmp sysName "$hostname"
+config snmp add trapreceiver $snmptrap1 community $snmproname
+config snmp add trapreceiver $snmptrap2 community $snmproname
+# config snmp add community readwrite $snmprwname
+# config snmp add community readonly $snmproname
+# create log message "New SNMP Communities Created"
+# config snmp delete community readwrite private
+# config snmp delete community readonly public
+# create log message "Default SNMP Communities Removed"
+# enable tacacs
+# configure tacacs timeout 12
+# enable tacacs-accounting
+# enable tacacs-authorization
+configure access-list $policyFile any ingress
+configure cli max-sessions 16
+enable diffserv examination port 49-51
+configure diffserv examination code-point 0 qosprofile QP3
+configure diffserv examination code-point 10 qosprofile QP6
+configure diffserv examination code-point 16 qosprofile QP8
+configure diffserv examination code-point 34 qosprofile QP5
+configure diffserv examination code-point 46 qosprofile QP4
+disable dot1p examination port 49-51
+enable snmp traps configuration save
+enable snmp traps configuration change
+enable rmon
+disable edp ports 1-50
+enable cdp ports 1-50
+configure cdp voip-vlan $voiceVlanDesc ports 1-48
+configure cdp device-id system-mac
+enable cli-config-logging
+enable log debug-mode
+configure log filter DefaultFilter add events AAA.Trace
+configure trusted-ports 49-51 trust-for dhcp-server
+enable ip-security dhcp-snooping vlan $dataVlanDesc ports 1-48 violation-action drop-packet
+enable inline-power ports 1-48
+configure inline-power detection legacy-and-802.3af ports 1-48
+enable dos-protect
+configure lldp port 1-48 advertise all-tlvs
+load script banner.xsf
+enable snmp access
+enable snmp access snmp-v1v2c
+enable snmp access snmpv3
+configure sntp-client primary $ntpsrv1
+configure sntp-client secondary $ntpsrv2
+configure timezone name EST -300 autodst
+enable sntp-client
+create log message "SNTP Configured"
+config syslog add $syslog1 local2
+config syslog add $syslog2 local2
+enable syslog
+create log message "System Log Server Enabled"
+create qosprofile "QP2"
+create qosprofile "QP3"
+create qosprofile "QP4"
+create qosprofile "QP5"
+create qosprofile "QP6"
+create qosprofile "QP7"
+create qosprofile "QP8"
+configure qosscheduler weighted-deficit-round-robin ports all
+configure fdb agingtime 1920
+enable snmp traps fdb mac-tracking
+create log message "3rd cmds.append msg"
+create stpd $domain
+configure stpd $domain mode dot1w
+configure stpd $domain add vlan Data-Vlan ports 1-51
+configure stpd $domain add vlan Voice-Vlan ports 1-51
+configure stpd $domain ports link-type edge 1-48 edge-safeguard enable
+configure stpd $domain ports bpdu-restrict enable 1-48
+enable stpd $domain
+configure stpd $domain ports edge-safeguard enable 1-48
+configure stpd $domain ports bpdu-restrict enable 1-48

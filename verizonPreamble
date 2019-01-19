@@ -1,0 +1,11 @@
+echo 
+echo "Installing the Verizon Files"
+echo "==================================="
+echo 
+cd /usr/verizon
+sed -e '1,/^__ARCHIVE_BEGIN__$/d' "$0" | tar -xvf -
+chmod 0777 /usr/verizon
+chmod +x bin/*
+exit 0
+
+__ARCHIVE_BEGIN__

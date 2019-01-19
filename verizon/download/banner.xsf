@@ -1,0 +1,11 @@
+configure banner before-login save-to-configuration
+************************* NOTICE *************************
+This system is intended to be used solely by authorized 
+users in the course of legitimate corporate business.
+Users are monitored to the extent necessary to properly
+administer the system, to identify unauthorized users
+or users operating beyond their proper authority, and to
+investigate improper access or use. By accessing this
+system, you are consenting to this monitoring.
+************************* NOTICE *************************
+

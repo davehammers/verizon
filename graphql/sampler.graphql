@@ -1,0 +1,164 @@
+# Basic Mutations:
+ 
+ 
+## Create Site with some basic config
+mutation {
+  network {
+    createSite(
+        input: {
+            siteLocation: "/World/VZ-Demo"
+            siteConfig: {
+                actionsConfig:{
+                autoAddDevices: true
+                addToArchive: false
+                enableCollection: false
+                addTrapReceiver: false
+                }
+            }
+        }
+    ){
+      status
+      message
+    }
+  }
+}
+ 
+## Modify Site with additional config
+mutation {
+  network {
+    modifySite(
+        input: {
+            siteLocation: "/World/VZ-Demo"
+            siteConfig: {
+                actionsConfig:{
+                autoAddDevices: true
+                addToArchive: false
+                enableCollection: false
+                addTrapReceiver: false
+                }
+            }
+        }
+    ){
+      status
+      message
+    }
+  }
+}
+ 
+## Create Devive
+mutation {
+  network {
+    createDevices(
+        input: {
+            devices:[
+                {
+                    siteLocation:"/World"
+                    ipAddress: "10.54.80.6"
+                    nickName: "VZ-Demo-80.6"
+                    profileName: "public_v1_Profile"
+                }
+            ]
+        }
+    ){
+      status
+      message
+    }
+  }
+}
+ 
+ 
+## Move device to a different site (This is currently broken in the latest build. You will have to install 8.2.4 latest AND I will have to patch your setup )
+mutation {
+  network {
+    configureDevice(
+        input:{
+            deviceConfig: {
+                ipAddress: "10.54.80.5"
+                generalConfig: {
+                defaultSitePath: "/World/VZ-Demo"
+                }
+            }
+        }
+    ){
+      status
+      message
+    }
+  }
+}
+ 
+## Delete Device
+mutation {
+  network {
+    deleteDevices(
+        input:{
+            removeData: true
+            devices: [
+                {
+                    ipAddress: "10.54.80.6"
+                }
+            ]
+        }
+    ){
+      status
+      message
+    }
+  }
+}
+ 
+ 
+## Create Custom Site variable
+mutation {
+  network {    
+    modifySite(
+        input:{
+            siteLocation: "/World/VZ-Demo"
+            siteConfig:{
+                customVariablesConfig: {
+                mutationType: ADD
+                customVariables: [
+                    {
+                        scopeCategory: SITE
+                        valueType: STRING
+                        name: "SiteVariable"
+                        value:"Site Variable Value"
+                    }
+                ]
+                }
+            }
+        }
+    ){
+      status
+      message
+      results {
+        status
+        message
+      }
+    }
+  }
+}
+ 
+## Create Custom Global Variable
+mutation {
+  network {
+    globalVariables(
+        input: {
+            mutationType: ADD
+            customVariables: [
+                {
+                    scopeCategory: SITE
+                    name: "GlobalVariable"
+                    valueType: STRING
+                    value: "Global Value"
+                }
+            ]
+        }
+    ){
+      status
+      message
+      results {
+        status
+        message
+      }
+    }
+  }
+}
