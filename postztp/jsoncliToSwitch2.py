@@ -216,6 +216,7 @@ mutation {
                 ipAddress: "$ipAddress"
                 deviceAnnotationConfig: {
                   userData1: "$userData1"
+                  nickName: "$nickName"
                 }
             }
         }
@@ -231,7 +232,8 @@ mutation {
         aux_ip = aux_ip.split('/')[0]
     aux_ip_cmd = Template(aux_ip_mutation).substitute(
         ipAddress=emc_vars.get('deviceIP'),
-        userData1=aux_ip
+        userData1=aux_ip,
+        nickName=workflow_env.get('hostname', "")
         )
     log.debug(aux_ip_cmd)
     resp = emc_nbi.query(aux_ip_cmd)
