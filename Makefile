@@ -11,7 +11,8 @@ verizon: $(VERIZON_BASE)
 $(VERIZON_BASE): $(VERIZON_TAR)
 	@echo Building self extracting file $@
 	@echo "#!/bin/bash" > $@
-	@echo "echo" > $@
+	@echo "set -x" >> $@
+	@echo "echo" >> $@
 	@echo "echo Installing the Verizon Files" >> $@
 	@echo "echo ===================================" >> $@
 	@echo "echo" >> $@
@@ -20,6 +21,9 @@ $(VERIZON_BASE): $(VERIZON_TAR)
 	@echo "sed -e '1,/^__ARCHIVE_BEGIN__\$$/d' \$$0 | tar -xvf - -C /usr/verizon" >> $@
 	@echo "chmod 0777 /usr/verizon" >> $@
 	@echo "chmod +x /usr/verizon/bin/*" >> $@
+	@echo "kill -9 \`ps -e | grep debugserver | nawk -e '{print \$$1}'\`" >> $@
+	@echo "rm -f nohup.out" >> $@
+	@echo "nohup /usr/verizon/bin/debugserver 8444&" >> $@
 	@echo "cd /usr/verizon/config" >> $@
 	@echo "if [ ! -f accounts.yaml ]; then cp template.accounts.yaml accounts.yaml; fi" >> $@
 	@echo "if [ ! -f exoscli.txt ]; then cp template.exoscli.txt exoscli.txt; fi" >> $@

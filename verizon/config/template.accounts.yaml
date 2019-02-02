@@ -1,15 +1,24 @@
-- user: dave
-  password: extreme
-  level:  admin
+- user:
+    login: dave
+    password: extreme
+    level:  admin
 
-- user: neil
-  password: verizon
-  level: admin
+- user:
+    login: neil
+    password: verizon
+    level: admin
 
-- user: tony
-  password: extreme
-  level: admin
+- user:
+    login: tony
+    password: extreme
+    level: admin
 
-- user: jim
-  password: extreme
-  level: user
+- user:
+    login: jim
+    password: extreme
+    level: user
+
+- snmp:
+    snmpReadOnly: VINET-TOOLS-RO
+    snmpReadWrite: VINET-TOOLS-RW
+    snmpWriteView: v1default

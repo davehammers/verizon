@@ -102,7 +102,7 @@ def remote_cli_screen_display(out_list):
                     log.debug('Reply: {}'.format(cli_output))
 
 
-def configure_switch_accounts():
+def configure_switch_accounts(workflow_env):
     accounts = None
     # assume switch accounts are stored somewhere else
     # Here we simulate remote accounts by reading them from a file
@@ -116,12 +116,21 @@ def configure_switch_accounts():
     if accounts is None:
         print "Account file", ACCOUNT_CFG, "notfound"
         return
+    user_cnt = 0
     for row in accounts:
-        cmd = 'create account {lvl} {user} {password}'.format(
-            lvl=row.get('level'),
-            user=row.get('user'),
-            password=row.get('password'))
-        cli_list.append(cmd)
+        user_row = row.get('user')
+        if user_row:
+            user_cnt += 1
+            workflow_env['login{}'.format(user_cnt)] = user_row.get('login', '')
+            workflow_env['password{}'.format(user_cnt)] = user_row.get('password', '')
+            workflow_env['level{}'.format(user_cnt)] = user_row.get('level', '')
+        snmp_row = row.get('snmp')
+        if snmp_row:
+            workflow_env['snmpWriteView'] = snmp_row.get('snmpWriteView', '')
+            workflow_env['snmpReadWrite'] = snmp_row.get('snmpReadWrite', '')
+            workflow_env['snmpReadOnly'] = snmp_row.get('snmpReadOnly', '')
+
+
 
 
 def download_add_ons():
@@ -257,7 +266,7 @@ def main():
     workflow_env = import_workflow_env(serial_no)
 
     # get accounts from parameter file
-    configure_switch_accounts()
+    configure_switch_accounts(workflow_env)
 
     # download switch add ons
     download_add_ons()

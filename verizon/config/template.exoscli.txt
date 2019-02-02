@@ -1,10 +1,19 @@
 # list below is v7 12-13-19
 create log message "First cmds.append msg"
 enable cli scripting
-# create account admin enss password $adminpw
+
+# create switch accounts taken from the accounts.yaml configuraiton file
+# the number of account commands should match the accounts.yaml file
+create account $level1 $login1 $password1
+create account $level2 $login2 $password2
+create account $level3 $login3 $password3
+create account $level4 $login4 $password4
+
 configure dns-client default-domain verizon.com
 configure dns-client add domain-suffix netd.vzwcorp.com
 configure dns-client add domain-suffix verizon.com
+
+# VLAN configuration
 config vlan Default delete ports all
 # Data VLAN
 create vlan $dataVlanDesc
@@ -16,6 +25,7 @@ configure $dataVlanDesc ipaddress $v6mgmtIP
 create vlan $voiceVlanDesc
 configure vlan $voiceVlanDesc tag $voiceVlan
 configure vlan $voiceVlan add ports all tagged
+
 # Router config
 configure iproute add default $gatewayAddress
 configure iproute add default $v6gatewayaddr
@@ -25,22 +35,31 @@ configure sys-recovery-level switch reset
 create log message "2nd cmds.append msg"
 configure vlan untagged-ports auto-move inform
 configure ports 1-48 rate-limit flood broadcast 250
+
+# SNMP configuration
 create log message "Starting SNMP Config"
 config snmp sysContact "$snmpContact"
 config snmp sysLocation "$snmpLocation"
 config snmp sysName "$hostname"
 config snmp add trapreceiver $snmptrap1 community $snmproname
 config snmp add trapreceiver $snmptrap2 community $snmproname
+configure snmpv3 add access "${snmpReadOnly}" sec-level priv
+configure snmpv3 add access "${snmpReadWrite}" sec-level priv write-view $snmpWriteView
+
 # config snmp add community readwrite $snmprwname
 # config snmp add community readonly $snmproname
 # create log message "New SNMP Communities Created"
 # config snmp delete community readwrite private
 # config snmp delete community readonly public
 # create log message "Default SNMP Communities Removed"
+
+# TACACS primary and secondary server IP configuration
+# is taken from the zone.yaml configuration file
 # enable tacacs
 # configure tacacs timeout 12
 # enable tacacs-accounting
 # enable tacacs-authorization
+
 configure access-list $policyFile any ingress
 configure cli max-sessions 16
 enable diffserv examination port 49-51
@@ -70,11 +89,15 @@ load script banner.xsf
 enable snmp access
 enable snmp access snmp-v1v2c
 enable snmp access snmpv3
-configure sntp-client primary $ntpsrv1
-configure sntp-client secondary $ntpsrv2
+
+# NTP client configuration is taken from the zone.yaml configuration file
+# and is unique per zone
+# configure sntp-client primary $ntpsrv1
+# configure sntp-client secondary $ntpsrv2
 configure timezone name EST -300 autodst
 enable sntp-client
 create log message "SNTP Configured"
+
 config syslog add $syslog1 local2
 config syslog add $syslog2 local2
 enable syslog
