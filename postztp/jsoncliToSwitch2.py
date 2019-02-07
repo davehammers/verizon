@@ -64,7 +64,7 @@ def add_serial_log_handler(serial_no):
     except Exception:
         pass
     serial_log_file = '{}/{}.txt'.format(LOG_DIR, serial_no)
-    handler = RotatingFileHandler(serial_log_file, maxBytes=100 * 1024, backupCount=1)
+    handler = RotatingFileHandler(serial_log_file, maxBytes=500 * 1024, backupCount=1)
     handler.setFormatter(logging.Formatter(LOG_FORMAT))
     handler.setLevel(logging.DEBUG)
     log.addHandler(handler)
@@ -313,12 +313,17 @@ def zone_parameters(workflow_env):
                 #   {tcp_port} client-ip ipaddress {vr vr_name}
                 ip = tacacs.get(p)
                 if p:
-                    cmd = 'configure tacacs {pri_sec} server {ip} client-ip {client} vr VR-Default'.format(
-                        pri_sec=p,
-                        ip=ip,
-                        client=workflow_env.get('mgmtIP')
-                    )
-                    cli_list.append(cmd)
+                    try:
+                        cmd = 'configure tacacs {pri_sec} server {ip} client-ip {client} vr VR-Default'.format(
+                            pri_sec=p,
+                            ip=ip.split('/')[0],
+                            client=workflow_env.get('mgmtIP').split('/')[0]
+                        )
+                        cli_list.append(cmd)
+                    except Exception as e:
+                            raise Exception("++++++ TACACS script procssing error {}".format(e))
+
+
 
         # NTP client params
         ntp = zone_row.get('ntp')
@@ -395,11 +400,14 @@ def send_commands_to_switch(switch):
         cmd = cmd.strip()
         log.debug('Send: {}'.format(cmd))
         try:
-            json_rslt = switch.cli(cmd)
+            # json_rslt = switch.cli(cmd)
+            rslt = emc_cli.send(cmd)
+            log.debug("\n{}".format(rslt.getOutput()))
         except Exception as e:
             log.error(e)
             continue
         # print 'JSON results', json_rslt
+        '''
         if not json_rslt:
             log.error('Did not get a propper JSONRPC response')
             continue
@@ -410,6 +418,7 @@ def send_commands_to_switch(switch):
                 log.error('Command error: {}'.format(result.get('error')))
                 continue
         remote_cli_screen_display(result)
+        '''
         log.debug('')
     log.debug("+" * 40)
     log.debug('Configuration Complete')
@@ -444,13 +453,13 @@ def main():
     # block of data.
     accounts_env = configure_switch_accounts()
 
+    # download switch add ons
+    download_add_ons()
+
     # import EXOS CLI
     # All of the CLI variables substitutions happen at this point
     # The translatted commands will be downloaded to the switch below
     import_EXOS_cli(workflow_env, accounts_env)
-
-    # download switch add ons
-    download_add_ons()
 
     # establish a JSONRPC session with the switch
     switch = create_JSONRPC_session()
