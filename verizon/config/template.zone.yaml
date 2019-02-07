@@ -1,15 +1,23 @@
-- zone: Zone1
-  ntp:
-    primary: 10.10.10.1
-    secondary: 10.10.10.2
-  tacacs:
-    primary: 11.11.11.1
-    secondary: 11.11.11.2        
+- zone:
+    name: Zone1
+    ntpPrimary: 10.10.10.1
+    nptSecondary: 10.10.10.2
+    tacacsPrimary: 11.11.11.1
+    tacacsSecondary: 11.11.11.2
+    tacacsKey: abcdefgh
 
-- zone: Zone2
-  ntp:
-    primary: 10.10.10.1
-    secondary: 10.10.10.2
-  tacacs:
-    primary: 11.11.11.1
-    secondary: 11.11.11.2        
+- zone:
+    name: Zone2
+    ntpPrimary: 10.10.10.3
+    nptSecondary: 10.10.10.4
+    tacacsPrimary: 11.11.11.5
+    tacacsSecondary: 11.11.11.6        
+    tacacsKey: abcdefgh
+
+- zone:
+    name: Zone3
+    ntpPrimary: 10.10.10.3
+    nptSecondary: 10.10.10.4
+    tacacsPrimary: 11.11.11.5
+    tacacsSecondary: 11.11.11.6        
+    tacacsKey: abcdefgh

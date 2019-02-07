@@ -19,6 +19,8 @@
     level: user
 
 - snmp:
-    snmpReadOnly: VINET-TOOLS-RO
-    snmpReadWrite: VINET-TOOLS-RW
-    snmpWriteView: v1default
+    snmpReadOnly: g
+    snmpReadWrite: h
+    snmpWriteView: '"i"'
+    emptyVariable: ""
+    anotherEmpty: ""

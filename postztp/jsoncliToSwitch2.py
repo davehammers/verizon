@@ -18,6 +18,7 @@ LST_FILE = '{}/{}'.format(VERIZON_HOME, VERIZON_LST)
 DOWNLOAD_DIR = '{}/download'.format(VERIZON_HOME)
 CONFIG_DIR = '{}/config'.format(VERIZON_HOME)
 EXOS_CLI_CFG = '{}/exoscli.txt'.format(CONFIG_DIR)
+EXOS_WRAPUP_CLI = '{}/exoswrapup.txt'.format(CONFIG_DIR)
 ACCOUNT_CFG = '{}/accounts.yaml'.format(CONFIG_DIR)
 ZONE_CFG = '{}/zone.yaml'.format(CONFIG_DIR)
 SERIAL_ENV_DIR = '{}/env'.format(VERIZON_HOME)
@@ -74,6 +75,13 @@ def import_workflow_env(serial_no):
     env_file = '{}/{}.json'.format(ENV_DIR, serial_no)
     with open(env_file, 'r') as fd:
         workflow_env = json.load(fd)
+        # variables may be IP address with a CIDR
+        # create a <name>Noslash version automatically
+        # e.g. mgmtIP = 10.10.10.1/16, mgmtIPNoslash = 10.10.10.1
+        for k, v in workflow_env.items():
+            if '/' in v:
+                lpart, _, rpart = v.rpartition('/')
+                workflow_env['{}Noslash'.format(k)] = lpart
         log.debug('Workflow environment \n{}'.format(json.dumps(workflow_env, indent=2)))
         return workflow_env
 
@@ -282,61 +290,46 @@ def import_EXOS_cli(workflow_env, accounts_env):
 
 def zone_parameters(workflow_env):
     log.debug('Processing Zone Parameters')
-    pri_sec = ['primary', 'secondary']
-    zone_info = None
+    zone_env = None
     try:
-        with open('{}/zone.yaml'.format(CONFIG_DIR)) as fd:
-            zone_info = yaml.load(stream=fd)
-            log.debug(zone_info)
+        with open(ZONE_CFG) as fd:
+            zone_env = yaml.load(stream=fd)
+            log.debug(json.dumps(zone_env, indent=2))
+            if not accounts_file_ok(zone_env):
+                raise Exception("++++++ {} file is inconsistent".format(ZONE_CFG))
     except Exception as e:
         log.error(e)
-        return
+        raise
+    if zone_env is None:
+        log.error('{} is empty or formatted wrong'.format(ZONE_CFG))
 
     my_zone = workflow_env.get('zone')
     log.debug('My Zone: {}'.format(my_zone))
     if my_zone is None:
         print "No zone found in workflow_env"
         return
-    for zone_row in zone_info:
-        zone = zone_row.get('zone')
-        log.debug('Zone: {}'.format(zone))
-        if not my_zone.endswith(zone):
-            # log.debug('No Match')
+
+    for zone_row in zone_env:
+        log.debug(zone_row)
+        log.debug(zone_row.items())
+        try:
+            k, v = zone_row.items()[0]
+        except Exception as e:
+            log.error(e)
+            continue
+        zoneName = v.get('name')
+        if zoneName is None:
+            log.error('zone entry missing name field {}', zone_row)
             continue
 
-        # TACACS parameters
-        tacacs = zone_row.get('tacacs')
-        log.debug('TACACS: {}'.format(tacacs))
-        if tacacs:
-            for p in pri_sec:
-                # configure tacacs [primary | secondary] server [ipaddress | hostname]
-                #   {tcp_port} client-ip ipaddress {vr vr_name}
-                ip = tacacs.get(p)
-                if p:
-                    try:
-                        cmd = 'configure tacacs {pri_sec} server {ip} client-ip {client} vr VR-Default'.format(
-                            pri_sec=p,
-                            ip=ip.split('/')[0],
-                            client=workflow_env.get('mgmtIP').split('/')[0]
-                        )
-                        cli_list.append(cmd)
-                    except Exception as e:
-                            raise Exception("++++++ TACACS script procssing error {}".format(e))
+        if not my_zone.endswith(zoneName):
+            continue
 
+        log.debug('Found zone: {}'.format(json.dumps(zone_row)))
 
-
-        # NTP client params
-        ntp = zone_row.get('ntp')
-        log.debug('SNTP: {}'.format(ntp))
-        if ntp:
-            for p in pri_sec:
-                ip = ntp.get(p)
-                if p:
-                    cmd = 'configure sntp-client {pri_sec} {ip} vr VR-Default'.format(
-                        pri_sec=p,
-                        ip=ip
-                    )
-                    cli_list.append(cmd)
+        # update the workflow_env with the zone variables
+        workflow_env.update(v)
+        return
 
 
 def store_aux_ip(workflow_env):
@@ -445,13 +438,13 @@ def main():
     # Use the hostname before "-" as stpDomain name
     get_stp_domain(workflow_env)
 
-    # process any zone specific parameters and update the workflow_env
-    zone_parameters(workflow_env)
-
     # get accounts from parameter file
     # these variables are used to repeat commands per each configuration
     # block of data.
     accounts_env = configure_switch_accounts()
+
+    # process any zone specific variables and update the workflow_env
+    zone_parameters(workflow_env)
 
     # download switch add ons
     download_add_ons()
