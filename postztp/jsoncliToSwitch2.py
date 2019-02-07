@@ -102,35 +102,61 @@ def remote_cli_screen_display(out_list):
                     log.debug('Reply: {}'.format(cli_output))
 
 
-def configure_switch_accounts(workflow_env):
-    accounts = None
+# check the file for consistency
+# each block type must have the same parameters defined
+# e.g. if a,b,c is present for one block, a,b,c must be present
+# for all blocks.
+#    [
+#    {
+#        "user": {
+#            "login": "dave",
+#            "password": "extreme",
+#            "level": "admin"
+#        }
+#    },
+#    {
+#        "user": {
+#            "login": "neil",
+#            "password": "verizon",
+#            "level": "admin"
+#            "superPower": "xray vision" <--- this is out of place
+#        }
+#    }
+#    ]
+def accounts_file_ok(accounts_env):
+    for row in accounts_env:
+        for row2 in accounts_env:
+            # are the block types the same?
+            if set(row.keys()) != set(row2.keys()):
+                # no skip this block
+                continue
+            for v in row.values():
+                for v2 in row2.values():
+                    if set(v.keys()) == set(v2.keys()):
+                        continue
+                    # if we are here the keys are not the same in 2 blocks of   the same type
+                    log.error("+++ Configuraiton error. Account blocks have different parameters")
+                    log.error('\n{}{}'.format(
+                        json.dumps(row, indent=2),
+                        json.dumps(row2, indent=2)))
+                    return False
+    return True
+
+
+def configure_switch_accounts():
     # assume switch accounts are stored somewhere else
     # Here we simulate remote accounts by reading them from a file
+    accounts_env = []
     try:
         with open(ACCOUNT_CFG) as fd:
-            accounts = yaml.load(stream=fd)
+            accounts_env = yaml.load(stream=fd)
     except Exception as e:
-        print e
-        return
-
-    if accounts is None:
-        print "Account file", ACCOUNT_CFG, "notfound"
-        return
-    user_cnt = 0
-    for row in accounts:
-        user_row = row.get('user')
-        if user_row:
-            user_cnt += 1
-            workflow_env['login{}'.format(user_cnt)] = user_row.get('login', '')
-            workflow_env['password{}'.format(user_cnt)] = user_row.get('password', '')
-            workflow_env['level{}'.format(user_cnt)] = user_row.get('level', '')
-        snmp_row = row.get('snmp')
-        if snmp_row:
-            workflow_env['snmpWriteView'] = snmp_row.get('snmpWriteView', '')
-            workflow_env['snmpReadWrite'] = snmp_row.get('snmpReadWrite', '')
-            workflow_env['snmpReadOnly'] = snmp_row.get('snmpReadOnly', '')
-
-
+        log.error(e)
+        return []
+    if accounts_file_ok(accounts_env):
+        return accounts_env
+    raise Exception("++++++ {} file is inconsistent".format(ACCOUNT_CFG))
+    return accounts_env
 
 
 def download_add_ons():
@@ -151,14 +177,107 @@ def download_add_ons():
         server_ip, VERIZON_LST))
 
 
-def import_EXOS_cli(workflow_env):
+def merge_two_dicts(x, y):
+    """Given two dicts, merge them into a new dict as a shallow copy."""
+    z = x.copy()
+    z.update(y)
+    return z
+
+
+# for each block in the accounts file
+# create an output EXOS CLI command
+def EXOS_combined_group_cli(cmd, grouptype, workflow_env, accounts_env):
+    for row in accounts_env:
+        for k, v in row.items():
+            if k != grouptype:
+                continue
+            try:
+                xlate_cli = Template(cmd).substitute(merge_two_dicts(workflow_env, v))
+                # log.debug("Accounts translated CLI: {}".format(xlate_cli))
+                cli_list.append(xlate_cli)
+            except Exception as e:
+                log.error(e)
+
+
+# try to combine the workflow environment with the account groups
+# to see if a CLI substitution will work
+def EXOS_cli_accounts_and_workflow(cmd, workflow_env, accounts_env):
+    # try the differnt blocks of information in the accounts file
+    for row in accounts_env:
+        for k, v in row.items():
+            try:
+                # test to see if the substitution works with data from the accounts file
+                Template(cmd).substitute(merge_two_dicts(workflow_env, v))
+            except Exception:
+                continue
+            # the substitution worked
+            # lets do it for each accounts data block
+            EXOS_combined_group_cli(cmd, k, workflow_env, accounts_env)
+            return True
+    return False
+
+
+# for each block in the accounts file
+# create an output EXOS CLI command
+def EXOS_account_group_cli(cmd, grouptype, accounts_env):
+    for row in accounts_env:
+        for k, v in row.items():
+            if k != grouptype:
+                continue
+            try:
+                xlate_cli = Template(cmd).substitute(v)
+                # log.debug("Accounts translated CLI: {}".format(xlate_cli))
+                cli_list.append(xlate_cli)
+            except Exception as e:
+                log.error(e)
+
+
+def EXOS_cli_account_test(cmd, accounts_env):
+    # try the differnt blocks of information in the accounts file
+    for row in accounts_env:
+        for k, v in row.items():
+            try:
+                # test to see if the substitution works with data from the accounts file
+                Template(cmd).substitute(v)
+            except Exception:
+                continue
+            # the substitution worked
+            # lets do it for each accounts data block
+            EXOS_account_group_cli(cmd, k, accounts_env)
+            return True
+    return False
+
+
+# Read the EXOS CLI command file with embedded variables
+# This function will substitute the variables with values
+# from the XMC workflow and/or the accounts.yaml file.
+#
+def import_EXOS_cli(workflow_env, accounts_env):
     with open(EXOS_CLI_CFG, 'r') as fd:
         for cmd in fd.read().splitlines():
+            # strip off any comments that begin with #
             cmd = cmd.split('#', 1)[0]
+            # remove any leading/trailing whitespace
             cmd = cmd.strip()
-            if cmd:
+            if not cmd:
+                continue
+            try:
+                # first see if the command line substitution works with the worflow env
                 xlate_cli = Template(cmd).substitute(workflow_env)
                 cli_list.append(xlate_cli)
+                continue
+            except Exception:
+                pass
+
+            if EXOS_cli_account_test(cmd, accounts_env):
+                continue
+            if EXOS_cli_accounts_and_workflow(cmd, workflow_env, accounts_env):
+                continue
+
+            # nothing worked for the entry in the EXOS CLI
+            msg = '\n+++ EXOS CLI could not be processed:\n--->{}'.format(cmd)
+            log.error(msg)
+            raise Exception(msg)
 
 
 def zone_parameters(workflow_env):
@@ -249,37 +368,24 @@ mutation {
     log.debug(resp)
 
 
-def main():
-    # ask the switch for its serial number
-    serial_no = get_switch_serial_no()
+# Function "get_stp_domain" takes the user entered hostname from the workflow
+# and gets everything before the dash "-" and uses that as the spanning tree domain
+# name per Verizon convention. The dash should always be in the 10th position in the hostname.
+# A consideration for later is that for India locations there will not be a dash
+# but an "i" (lowercase) but it will also be in the 10th position. The code below
+# only looks for the dash.
+def get_stp_domain(workflow_env):
+    stpd = workflow_env.get('hostname')
+    if '-' in stpd:
+        stpd = stpd.split('-')[0]
+        workflow_env['domain'] = stpd
+        log.debug("domain value changed to {}".format(workflow_env.get('domain')))
+    else:
+        log.debug('{} is not a valid hostname'.format(stpd))
+    log.debug(workflow_env['domain'])
 
-    # add serial number specific log handler
-    add_serial_log_handler(serial_no)
-    log.debug('*' * 80)
-    log.debug('Start {}'.format(serial_no))
-    log.debug('*' * 80)
 
-    # dump the runtime environment
-    dump_debug()
-
-    # get the runtime environment from the workflow process
-    workflow_env = import_workflow_env(serial_no)
-
-    # get accounts from parameter file
-    configure_switch_accounts(workflow_env)
-
-    # download switch add ons
-    download_add_ons()
-
-    # import EXOS CLI
-    import_EXOS_cli(workflow_env)
-
-    # process any zone specific parameters
-    zone_parameters(workflow_env)
-
-    # establish a JSONRPC session with the switch
-    switch = create_JSONRPC_session()
-
+def send_commands_to_switch(switch):
     log.debug('Sending CLI commands to the switch')
     log.debug('-' * 40)
     log.debug('\n{}'.format('\n'.join(cli_list)))
@@ -309,6 +415,51 @@ def main():
     log.debug('Configuration Complete')
     log.debug("+" * 40)
 
+
+def main():
+    # ask the switch for its serial number
+    serial_no = get_switch_serial_no()
+
+    # add serial number specific log handler
+    add_serial_log_handler(serial_no)
+    log.debug('*' * 80)
+    log.debug('Start {}'.format(serial_no))
+    log.debug('*' * 80)
+
+    # dump the runtime environment
+    dump_debug()
+
+    # get the runtime environment from the workflow process
+    workflow_env = import_workflow_env(serial_no)
+
+    # Modify the worflow_env
+    # Use the hostname before "-" as stpDomain name
+    get_stp_domain(workflow_env)
+
+    # process any zone specific parameters and update the workflow_env
+    zone_parameters(workflow_env)
+
+    # get accounts from parameter file
+    # these variables are used to repeat commands per each configuration
+    # block of data.
+    accounts_env = configure_switch_accounts()
+
+    # import EXOS CLI
+    # All of the CLI variables substitutions happen at this point
+    # The translatted commands will be downloaded to the switch below
+    import_EXOS_cli(workflow_env, accounts_env)
+
+    # download switch add ons
+    download_add_ons()
+
+    # establish a JSONRPC session with the switch
+    switch = create_JSONRPC_session()
+
+    # All variable substitution is complete. Send all CLI commands
+    # to the switch
+    send_commands_to_switch(switch)
+
+    # update XMC with the auxillary IP addres in user data1
     store_aux_ip(workflow_env)
 
 
