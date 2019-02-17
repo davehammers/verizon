@@ -1,9 +1,4 @@
 - user:
-    login: dave
-    password: extreme
-    level:  admin
-
-- user:
     login: neil
     password: verizon
     level: admin

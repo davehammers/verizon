@@ -3,11 +3,7 @@ create log message "First cmds.append msg"
 enable cli scripting
 
 # create switch accounts taken from the accounts.yaml configuraiton file
-# the number of account commands should match the accounts.yaml file
-create account $level1 $login1 $password1
-create account $level2 $login2 $password2
-create account $level3 $login3 $password3
-create account $level4 $login4 $password4
+create account $level $login $password
 
 configure dns-client default-domain verizon.com
 configure dns-client add domain-suffix netd.vzwcorp.com
