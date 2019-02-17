@@ -1,14 +1,15 @@
+BIN_DIR = bin
+BUILD_DIR = _build
+BUILD_BIN_DIR = $(BUILD_DIR)/bin
+BUILD_DEBUGSERVER = $(BUILD_DIR)/debugserver
+BUILD_DEVICESCANNER = $(BUILD_DIR)/devicescanner
 VERIZON_BASE = verizonXMC
-VERIZON_TAR = $(VERIZON_BASE).tar
-all:
-	@echo
-	@echo "make verizon to build a self extracting file for verizon"
-	@echo
+VERIZON_BIN = $(BIN_DIR)/$(VERIZON_BASE)
+VERIZON_TAR = $(BUILD_BIN_DIR)/$(VERIZON_BASE).tar
 
-PHONY: verizon debugserver devicescanner
-verizon: $(VERIZON_BASE)
+all: $(VERIZON_BIN)
 
-$(VERIZON_BASE): $(VERIZON_TAR)
+$(VERIZON_BIN): $(VERIZON_TAR)
 	@echo Building self extracting file $@
 	@echo "#!/bin/bash" > $@
 	@echo "set -x" >> $@
@@ -33,11 +34,20 @@ $(VERIZON_BASE): $(VERIZON_TAR)
 	@cat $? >> $@
 	@chmod +x $@
 
-$(VERIZON_TAR): debugserver devicescanner
-	tar -cvf verizonXMC.tar -C verizon .
+$(VERIZON_TAR): $(BUILD_DEBUGSERVER) $(BUILD_DEVICESCANNER)
+	mkdir -p $(@D)
+	mkdir -p $(BUILD_DIR)
+	cp -r verizon $(BUILD_DIR)
+	cd $(BUILD_DIR);tar -cvf ../$@ -C verizon .
 
-debugserver devicescanner:
+$(BUILD_DEBUGSERVER) $(BUILD_DEVICESCANNER):
+	mkdir -p $(@D)
+	cp -r $(@F) $@
 	make -C $@
 
 clean:
-	rm -f $(VERIZON_TAR) $(VERIZON_BASE)
+	rm -rf $(BUILD_DIR) $(BIN_DIR)/*
+
+release: $(VERIZON_BIN)
+	git tag $(date +"%Y-%m-%d")
+	git push --tags
