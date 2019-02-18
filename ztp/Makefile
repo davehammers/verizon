@@ -13,7 +13,7 @@ all: $(VERIZON_BIN)
 $(VERIZON_BIN): $(VERIZON_TAR)
 	@echo Building self extracting file $@
 	@echo "#!/bin/bash" > $@
-	@echo "set -x" >> $@
+	@echo "mkdir -p /usr/verizon" >> $@
 	@echo "echo" >> $@
 	@echo "echo Installing the Verizon Files" >> $@
 	@echo "echo ===================================" >> $@

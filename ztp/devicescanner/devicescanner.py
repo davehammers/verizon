@@ -10,6 +10,7 @@ from logging.handlers import RotatingFileHandler
 import os
 
 site_change_list = []
+profile_dict = {}
 
 VERIZON_HOME = '/usr/verizon'
 LOG_DIR = '{}/logs'.format(VERIZON_HOME)
@@ -21,7 +22,7 @@ DEV_DATA = 'deviceData'
 
 
 LOG_FORMAT = '%(asctime)s:%(levelname)s:%(funcName)s:%(lineno)s: %(message)s'
-log = logging.getLogger('postztp')
+log = logging.getLogger('devicescanner')
 log.setLevel(logging.DEBUG)
 if not len(log.handlers):
     handler = logging.StreamHandler()
@@ -58,6 +59,34 @@ def send_http_post(args, query):
         return resp
     except Exception:
         return None
+
+
+def get_profile_list(args):
+    profile_query = '''
+{
+    administration{
+        profiles {
+            profileId
+            profileName
+        }
+    }
+}
+'''
+    profile_dict.clear()
+    resp = send_http_post(args, profile_query)
+    if resp is None:
+        return None
+
+    rslt = resp.json()
+    log.debug(json.dumps(rslt, indent=2))
+    try:
+        profile_list = rslt["data"]["administration"]["profiles"]
+    except Exception:
+        return None
+    for row in profile_list:
+        profileId = row.get("profileId")
+        profileName = row.get("profileName")
+        profile_dict[profileName] = profileId
 
 
 def get_xmc_device_list(args):
@@ -152,6 +181,7 @@ def add_device(args, row):
                     ipAddress: "$ipAddress"
                     nickName: "$nickName"
                     profileName: "$profileName"
+                    profileId: $profileId
                 }
             ]
         }
@@ -167,76 +197,61 @@ def add_device(args, row):
         sitePath=row.get('sitePath'),
         ipAddress=device_data.get(AUX_IP_FIELD),
         nickName=row.get('nickName'),
-        profileName=device_data.get('profileName')
+        profileName=device_data.get('profileName'),
+        profileId=profile_dict.get(device_data.get('profileName'))
         )
     log.debug('create device {}'.format(add_cmd))
-    send_http_post(args, add_cmd)
+    resp = send_http_post(args, add_cmd)
+    if resp is None:
+        return False
 
-
-def rediscover_device(args, row):
-    rediscover_device_mutation = '''
-mutation {
-  network {
-    rediscoverDevices(
-        input:{
-            devices: [
-                {
-                    ipAddress: "$ipAddress"
-                }
-            ]
-        }
-    ){
-      status
-      message
-    }
-  }
-}
-'''
-    device_data = row.get(DEV_DATA)
-    update_cmd = Template(rediscover_device_mutation).substitute(
-        ipAddress=device_data.get(AUX_IP_FIELD),
-        serialNumber=device_data.get('serialNumber')
-        )
-    log.debug('rediscover device {}'.format(update_cmd))
-    send_http_post(args, update_cmd)
-
-
-def move_device_site(args, row):
-    move_site_mutation = '''
-mutation {
-  network {
-    configureDevice(
-        input: {
-            deviceConfig: {
-                ipAddress: "$ipAddress"
-                generalConfig: {
-                    defaultSitePath: "$defaultSitePath"
-                }
-            }
-        }
-    ){
-      status
-      message
-    }
-  }
-}
-'''
-    device_data = row.get(DEV_DATA)
-    move_cmd = Template(move_site_mutation).substitute(
-        ipAddress=device_data.get(AUX_IP_FIELD),
-        defaultSitePath=row.get('sitePath')
-        )
-    log.debug('move site {}'.format(move_cmd))
-    resp = send_http_post(args, move_cmd)
-    xmc_resp = resp.json()
+    rslt = resp.json()
+    log.debug(json.dumps(rslt, indent=2))
     try:
-        if str(xmc_resp['data']['network']['configureDevice']['status']) == 'ERROR':
-            site_change_list.append((device_data.get(AUX_IP_FIELD), row.get('sitePath')))
-            log.debug('appending {} {} to change list'.format(
-                device_data.get(AUX_IP_FIELD),
-                row.get('sitePath')))
-    except Exception as e:
-        log.error(e)
+        status = rslt["data"]["network"]["createDevices"]["status"]
+    except Exception:
+        return False
+    if status == "ERROR":
+        return False
+    return True
+
+
+def get_site_profile(args, site_path):
+    # sample response
+    # {
+    #   "data" : {
+    #     "network" : {
+    #       "siteByLocation" : {
+    #         "defaultProfile" : "public_v2_Profile",
+    #         "location" : "/World/North America/United States/North Carolina/Raleigh"
+    #       }
+    #     }
+    #   }
+    # }
+    get_site_profile_query = '''
+{
+    network{
+        siteByLocation(location: "$sitePath") {
+                deviceData{
+                    defaultProfile
+                    location
+                }
+        }
+    }
+}
+'''
+    query = Template(get_site_profile_query).substitute(sitePath=site_path)
+    resp = send_http_post(args, query)
+    if resp is None:
+        return None
+
+    rslt = resp.json()
+    log.debug(json.dumps(rslt, indent=2))
+    try:
+        site_dict = rslt["data"]["network"]["siteByLocation"]
+    except Exception:
+        return None
+    return site_dict.get("defaultProfile")
 
 
 def ping_device(args, device_list):
@@ -252,9 +267,9 @@ def ping_device(args, device_list):
             # don't change the device attributes
             log.error(e)
             continue
-        add_device(args, row)
-        delete_device(args, row)
-        move_device_site(args, row)
+        if add_device(args, row):
+            # if add was successful, delete the old device
+            delete_device(args, row)
 
 
 def get_params():
@@ -280,16 +295,9 @@ def get_params():
     return args
 
 
-def scanner_move_sites(args):
-    global site_change_list
-    move_list = list(site_change_list)
-    site_change_list = []
-    for ip, sitePath in move_list:
-        row = {"sitePath": sitePath, DEV_DATA: {AUX_IP_FIELD: ip}}
-        move_device_site(args, row)
-
-
 def scanner(args):
+    # collect the list of available profile names
+    get_profile_list(args)
     # get list of devices from XMC
     # Look for devices with IP addresses in user data
     device_list = get_xmc_device_list(args)
@@ -305,39 +313,10 @@ def main():
     # get xmc credentials
     args = get_params()
 
-    # mutation_test(args)
-    # move_site_test(args)
-    # log.debug("test site_change_list:{}".format(site_change_list))
-
     while True:
         scanner(args)
         # sleep 5 minutes
-        if site_change_list:
-            scanner_move_sites(args)
-            sleep(15)
-        else:
-            sleep(5 * 60)
-
-
-def mutation_test(args):
-    test_row = {
-          "sitePath": "/World",
-          "nickName": "Switch Moscow",
-          "deviceData": {
-            "profileName": "public_v1_Profile",
-            "userData1": "10.68.69.23",
-            "ipAddress": "10.68.69.60",
-            "serialNumber": "1633N-42851"
-          },
-          "ip": "10.68.69.60"
-        }
-    add_device(args, test_row)
-    rediscover_device(args, test_row)
-
-
-def move_site_test(args):
-    site_change_list.append(("10.68.69.60", "/World/Switches/Access/Retail/Zone1/test30"))
-    return scanner_move_sites(args)
+        sleep(5 * 60)
 
 
 main()
