@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	//	"net/http/httputil"
 	"os"
 	"strconv"
 	"strings"
@@ -74,6 +73,7 @@ func fileServer(w http.ResponseWriter, req *http.Request) {
 		defer from.Close()
 		// prepart the HTTP response to be constant width
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		w.Header().Set("Content-Length", strconv.Itoa(int(fi.Size())+13))
 		// fmt.Fprintf(w, "<pre style=\"font-size: 16px\">\n")
 		fmt.Fprintf(w, "<pre>\n")
 		_, err = io.Copy(w, from)
