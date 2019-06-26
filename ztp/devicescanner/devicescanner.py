@@ -1,3 +1,4 @@
+from sys import exit
 import argparse
 import requests
 import json
@@ -8,6 +9,9 @@ from string import Template
 import logging
 from logging.handlers import RotatingFileHandler
 import os
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 
 site_change_list = []
 profile_dict = {}
@@ -25,10 +29,10 @@ LOG_FORMAT = '%(asctime)s:%(levelname)s:%(funcName)s:%(lineno)s: %(message)s'
 log = logging.getLogger('devicescanner')
 log.setLevel(logging.DEBUG)
 if not len(log.handlers):
-    handler = logging.StreamHandler()
-    handler.setFormatter(logging.Formatter(LOG_FORMAT))
-    handler.setLevel(logging.DEBUG)
-    log.addHandler(handler)
+    std_handler = logging.StreamHandler()
+    std_handler.setFormatter(logging.Formatter(LOG_FORMAT))
+    std_handler.setLevel(logging.WARNING)
+    log.addHandler(std_handler)
 
 
 def add_ip_log_handler(ipaddress):
@@ -77,7 +81,12 @@ def get_profile_list(args):
     if resp is None:
         return None
 
-    rslt = resp.json()
+    try:
+        rslt = resp.json()
+    except ValueError as e:
+        log.error(e)
+        return None
+
     log.debug(json.dumps(rslt, indent=2))
     try:
         profile_list = rslt["data"]["administration"]["profiles"]
@@ -111,7 +120,11 @@ def get_xmc_device_list(args):
     if resp is None:
         return None
 
-    rslt = resp.json()
+    try:
+        rslt = resp.json()
+    except ValueError as e:
+        log.error(e)
+        return None
     log.debug(json.dumps(rslt, indent=2))
     try:
         device_data_list = rslt["data"]["network"]["devices"]
@@ -276,6 +289,12 @@ def get_params():
     # These are the command line options for jsonrpc_client
     parser = argparse.ArgumentParser(prog='devicescanner')
     parser.add_argument(
+        '-d',
+        dest='debug',
+        help='Enable debug output directly to the terminal',
+        action='store_true',
+        default=False)
+    parser.add_argument(
         '-u',
         dest='username',
         help='Login username for Extreme Management Center')
@@ -291,7 +310,16 @@ def get_params():
         default='extremecontrol')
     args = parser.parse_args()
 
-    add_ip_log_handler(args.ipaddress)
+    try:
+        add_ip_log_handler(args.ipaddress)
+    except Exception as e:
+        log.error(e)
+        ipaddress_log_file = '{}/{}.txt'.format(LOG_DIR, args.ipaddress)
+        log.error('Cannot open {}'.format(ipaddress_log_file))
+        exit(1)
+
+    if args.debug:
+        std_handler.setLevel(logging.DEBUG)
     return args
 
 
