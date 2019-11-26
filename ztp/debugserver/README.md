@@ -1,7 +1,7 @@
 # debugserver 
 **Web service for viewing Verizon debug files**
 
-This web service runs next to XMC on https://<ip>:8444
+This web service runs next to XMC on https://\<ip\>:8444
 
 debugserver checks with XMC to see if the user is logged in.
 
